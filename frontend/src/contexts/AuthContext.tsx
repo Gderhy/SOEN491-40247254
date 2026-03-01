@@ -35,7 +35,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         
         // Set JWT token for API calls if session exists
         if (session?.access_token) {
-          apiService.setAuthToken(session.access_token);
+          apiService.setToken(session.access_token);
         }
       }
       setLoading(false);
@@ -52,9 +52,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         
         // Update JWT token for API calls
         if (session?.access_token) {
-          apiService.setAuthToken(session.access_token);
+          apiService.setToken(session.access_token);
         } else {
-          apiService.clearAuthToken();
+          apiService.clearToken();
         }
         
         setLoading(false);
@@ -90,7 +90,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Error signing out:', error);
     } else {
       // Clear JWT token from API service
-      apiService.clearAuthToken();
+      apiService.clearToken();
     }
   };
 

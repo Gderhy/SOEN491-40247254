@@ -12,7 +12,7 @@ import type { Request, Response } from 'express';
  */
 export const getCurrentUser = (req: Request, res: Response): void => {
   // req.user is guaranteed to exist after requireAuth middleware
-  const user = req.user!;
+  const user = (req as any).user!;
   
   res.json({
     id: user.id,
@@ -44,7 +44,7 @@ export const getCurrentUser = (req: Request, res: Response): void => {
  */
 export const validateToken = (req: Request, res: Response): void => {
   // If we reach here, the token is valid (requireAuth passed)
-  const user = req.user!;
+  const user = (req as any).user!;
   
   res.json({
     valid: true,

@@ -5,16 +5,13 @@
 
 import type { User } from '@supabase/supabase-js';
 
-declare global {
-  namespace Express {
-    interface Request {
-      /**
-       * Authenticated user from Supabase JWT token
-       * Available after requireAuth middleware validation
-       */
-      user?: User;
-    }
+// Augment the Express namespace
+declare module 'express-serve-static-core' {
+  interface Request {
+    /**
+     * Authenticated user from Supabase JWT token
+     * Available after requireAuth middleware validation
+     */
+    user?: User;
   }
 }
-
-export {}; // Make this file a module

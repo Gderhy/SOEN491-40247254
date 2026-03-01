@@ -53,7 +53,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     }
 
     // Attach user to request object
-    req.user = data.user;
+    (req as any).user = data.user;
     
     // Continue to next middleware/route handler
     next();
@@ -81,7 +81,7 @@ export async function optionalAuth(req: Request, res: Response, next: NextFuncti
       const { data, error } = await supabase.auth.getUser(token);
       
       if (!error && data.user) {
-        req.user = data.user;
+        (req as any).user = data.user;
       }
     }
     

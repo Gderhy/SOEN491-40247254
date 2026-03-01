@@ -3,14 +3,8 @@
  * Centralized exports for all service modules
  */
 
-// API Client (Supabase-based)
-export * from './apiClient';
-
-// API Service (axios-based backend client)
+// Unified API Service - handles all backend communication
 export { apiService } from './apiService';
-
-// Authentication Service
-export * from './authService';
 
 // Token Service  
 export * from './tokenService';
