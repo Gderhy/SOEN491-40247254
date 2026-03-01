@@ -24,7 +24,7 @@ export function validateEnvironment() {
 export const config = {
   supabase: {
     url: import.meta.env.VITE_SUPABASE_URL,
-    anonKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+    publishableKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
   },
   api: {
     baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000'
