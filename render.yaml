@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: asset-tracker-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    plan: free
+    autoDeploy: true
