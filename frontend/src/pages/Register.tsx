@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../config/supabase';
-import { validateRegisterForm } from '../utils/validation';
-import type { RegisterFormData, FormErrors } from '../types/auth';
+import { supabase } from '@/config/supabase';
+import { validateRegisterForm } from '@/utils/validation';
+import type { RegisterFormData, FormErrors } from '@/types/auth';
 
 /**
  * Register page component
  * Handles user registration with email/password
  */
-export default function Register() {
+export function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<RegisterFormData>({
     email: '',
@@ -159,3 +159,6 @@ export default function Register() {
     </div>
   );
 }
+
+// Default export for backward compatibility
+export default Register;

@@ -1,16 +1,13 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import ProtectedRoute from '../components/ProtectedRoute';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Dashboard from '../pages/Dashboard';
+import { ProtectedRoute } from '@components/index';
+import { Home, Login, Register, Dashboard } from '@pages/index';
 import { ROUTES } from './routeConfig';
 
 /**
  * AppRoutes component
  * Centralized route definitions for the application
  */
-export default function AppRoutes() {
+export function AppRoutes() {
   return (
     <Routes>
       {/* Public routes */}
@@ -33,3 +30,6 @@ export default function AppRoutes() {
     </Routes>
   );
 }
+
+// Default export for backward compatibility
+export default AppRoutes;

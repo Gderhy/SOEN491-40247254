@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../config/supabase';
-import { validateLoginForm } from '../utils/validation';
-import { ROUTES } from '../routes';
-import type { LoginFormData, FormErrors } from '../types/auth';
+import { supabase } from '@/config/supabase';
+import { validateLoginForm } from '@/utils/index';
+import type { LoginFormData, FormErrors } from '@/types/auth';
 
 /**
  * Login page component
  * Handles user authentication with email/password
  */
-export default function Login() {
+export function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -126,3 +125,6 @@ export default function Login() {
     </div>
   );
 }
+
+// Default export for backward compatibility
+export default Login;

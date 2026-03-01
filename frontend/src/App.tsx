@@ -1,8 +1,8 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { AppRoutes } from './routes';
-import './App.css';
-import './styles/auth.css';
+import { AuthProvider } from '@contexts/index';
+import { AppRoutes } from '@routes/index';
+import '@/App.css';
+import '@styles/auth.css';
 
 /**
  * Main App component with routing and authentication
