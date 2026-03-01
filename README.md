@@ -7,7 +7,7 @@ Gabriel Derhy
 
 This is a monorepo containing:
 - **Frontend**: React + TypeScript (Vite)
-- **Backend**: Node.js + Express
+- **Backend**: Node.js + Express + TypeScript
 - **Database/Auth**: Supabase (to be added later)
 
 ```
@@ -49,12 +49,14 @@ The frontend will be available at: **http://localhost:5173**
    npm install
    ```
 
-3. Start the server:
+3. Start the development server:
    ```bash
    npm run dev
    ```
-   or
+   
+   Or build and run production version:
    ```bash
+   npm run build
    npm start
    ```
 
