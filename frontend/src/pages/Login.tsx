@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../config/supabase';
 import { validateLoginForm } from '../utils/validation';
+import { ROUTES } from '../routes';
 import type { LoginFormData, FormErrors } from '../types/auth';
 
 /**
