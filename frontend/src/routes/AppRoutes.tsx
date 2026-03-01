@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { ProtectedRoute } from '@components/index';
+import { ProtectedRoute, ApiTest } from '@components/index';
 import { Home, Login, Register, Dashboard } from '@pages/index';
 import { ROUTES } from './routeConfig';
 
@@ -14,6 +14,7 @@ export function AppRoutes() {
       <Route path={ROUTES.HOME} element={<Home />} />
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.REGISTER} element={<Register />} />
+      <Route path={ROUTES.API_TEST} element={<ApiTest />} />
       
       {/* Protected routes */}
       <Route 

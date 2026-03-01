@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 import type { AuthContextType } from '../types/auth';
+import { apiService } from '../services/apiService';
 
 // Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,6 +32,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else {
         setSession(session);
         setUser(session?.user ?? null);
+        
+        // Set JWT token for API calls if session exists
+        if (session?.access_token) {
+          apiService.setAuthToken(session.access_token);
+        }
       }
       setLoading(false);
     };
@@ -43,6 +49,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         console.log('Auth state changed:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
+        
+        // Update JWT token for API calls
+        if (session?.access_token) {
+          apiService.setAuthToken(session.access_token);
+        } else {
+          apiService.clearAuthToken();
+        }
+        
         setLoading(false);
       }
     );
@@ -74,6 +88,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error('Error signing out:', error);
+    } else {
+      // Clear JWT token from API service
+      apiService.clearAuthToken();
     }
   };
 

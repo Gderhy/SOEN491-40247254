@@ -32,9 +32,14 @@ export function Home() {
           <div className="home-card">
             <h2>Welcome back, {user.email}!</h2>
             <p>You're already signed in.</p>
-            <Link to="/dashboard" className="cta-button">
-              Go to Dashboard
-            </Link>
+            <div className="home-buttons">
+              <Link to="/dashboard" className="cta-button">
+                Go to Dashboard
+              </Link>
+              <Link to="/api-test" className="cta-button secondary">
+                Test API Connection
+              </Link>
+            </div>
           </div>
         ) : (
           // User is not logged in
@@ -47,6 +52,9 @@ export function Home() {
               </Link>
               <Link to="/register" className="cta-button secondary">
                 Create Account
+              </Link>
+              <Link to="/api-test" className="cta-button secondary">
+                Test API
               </Link>
             </div>
           </div>
