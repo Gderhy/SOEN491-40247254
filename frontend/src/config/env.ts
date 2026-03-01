@@ -5,7 +5,8 @@
 export function validateEnvironment() {
   const requiredVars = [
     'VITE_SUPABASE_URL',
-    'VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY'
+    'VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY',
+    'VITE_API_BASE_URL'
   ];
 
   const missing = requiredVars.filter(varName => !import.meta.env[varName]);

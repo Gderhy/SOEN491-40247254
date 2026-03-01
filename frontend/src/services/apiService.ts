@@ -1,13 +1,16 @@
 /**
  * Unified API Service
  * Single service for all backend communication with JWT authentication
+ * 
+ * Configuration:
+ * - Backend URL is configured via VITE_API_BASE_URL environment variable
+ * - Default fallback: http://localhost:4000
+ * - Tokens are stored in localStorage with automatic injection
  */
 
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-
-// API base URL
-const API_BASE_URL = 'http://localhost:4000';
+import { config } from '../config/env';
 
 // Token storage key
 const TOKEN_KEY = 'supabase.auth.token';
@@ -21,7 +24,7 @@ class ApiService {
   constructor() {
     // Create axios instance
     this.client = axios.create({
-      baseURL: API_BASE_URL,
+      baseURL: config.api.baseUrl,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -65,6 +68,12 @@ class ApiService {
 
   clearToken(): void {
     localStorage.removeItem(TOKEN_KEY);
+  }
+
+  // ============ UTILITY METHODS ============
+  
+  getBaseUrl(): string {
+    return config.api.baseUrl;
   }
 
   // ============ HEALTH CHECK ENDPOINTS ============

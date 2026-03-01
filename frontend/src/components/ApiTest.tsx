@@ -46,7 +46,8 @@ export function ApiTest() {
       
       {/* Auth Status */}
       <div className="mb-6 p-4 bg-gray-100 rounded">
-        <h3 className="font-semibold mb-2">Auth Status:</h3>
+        <h3 className="font-semibold mb-2">Configuration:</h3>
+        <p>Backend URL: {apiService.getBaseUrl()}</p>
         <p>User: {user ? user.email : 'Not logged in'}</p>
         <p>Token: {session?.access_token ? 'Present' : 'None'}</p>
       </div>
