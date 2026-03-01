@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/contexts/index';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -11,7 +11,7 @@ interface ProtectedRouteProps {
  * Redirects unauthenticated users to login page
  * Preserves the intended destination in location state
  */
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -41,3 +41,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   // User is authenticated, render the protected content
   return <>{children}</>;
 }
+
+// Default export for backward compatibility
+export default ProtectedRoute;

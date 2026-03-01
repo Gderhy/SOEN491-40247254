@@ -1,10 +1,10 @@
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@contexts/index';
 
 /**
  * Dashboard page - protected route
  * Displays user information and app functionality
  */
-export default function Dashboard() {
+export function Dashboard() {
   const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
@@ -45,3 +45,6 @@ export default function Dashboard() {
     </div>
   );
 }
+
+// Default export for backward compatibility
+export default Dashboard;

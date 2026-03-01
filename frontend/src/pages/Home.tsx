@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@contexts/index';
 
 /**
  * Home page component
  * Landing page with navigation based on auth status
  */
-export default function Home() {
+export function Home() {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -73,3 +73,6 @@ export default function Home() {
     </div>
   );
 }
+
+// Default export for backward compatibility
+export default Home;

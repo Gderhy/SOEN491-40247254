@@ -1,4 +1,4 @@
-import type { LoginFormData, RegisterFormData, FormErrors } from '../types/auth';
+import type { LoginFormData, RegisterFormData, FormErrors } from '@/types/auth';
 
 /**
  * Validates email format using regex
