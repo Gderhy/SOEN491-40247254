@@ -8,9 +8,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: config.nodeEnv === 'development' ? ['http://localhost:5173', 'http://localhost:3000'] : [],
-  credentials: true
+  origin: true,
+  credentials: false
 }));
+
 app.use(express.json());
 
 // Setup all routes
