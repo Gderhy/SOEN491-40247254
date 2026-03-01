@@ -5,7 +5,7 @@
 export function validateEnvironment() {
   const requiredVars = [
     'VITE_SUPABASE_URL',
-    'VITE_SUPABASE_ANON_KEY'
+    'VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY'
   ];
 
   const missing = requiredVars.filter(varName => !import.meta.env[varName]);
@@ -24,7 +24,7 @@ export function validateEnvironment() {
 export const config = {
   supabase: {
     url: import.meta.env.VITE_SUPABASE_URL,
-    anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY
+    anonKey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
   },
   api: {
     baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000'

@@ -13,11 +13,10 @@ app.get('/health', (req, res) => {
 });
 
 // Enhanced health check with Supabase connection test
-app.get('/health/detailed', async (req, res) => {
+app.get("/health/detailed", async (_req, res) => {
   try {
-    // Test Supabase connection
-    const { error } = await supabase.from('_test').select('*').limit(1);
-    
+    const { data, error } = await supabase.auth.getSession();
+
     res.json({
       ok: true,
       environment: config.nodeEnv,
@@ -30,7 +29,7 @@ app.get('/health/detailed', async (req, res) => {
   } catch (err) {
     res.status(500).json({
       ok: false,
-      error: 'Health check failed',
+      error: "Health check failed",
       timestamp: new Date().toISOString()
     });
   }
