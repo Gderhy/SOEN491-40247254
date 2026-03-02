@@ -7,6 +7,7 @@ export const ROUTES = {
   LOGIN: '/login',
   REGISTER: '/register',
   DASHBOARD: '/dashboard',
+  ASSETS: '/assets',
   API_TEST: '/api-test',
 } as const;
 
@@ -44,6 +45,12 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     name: 'Dashboard',
     protected: true,
     description: 'Main application dashboard'
+  },
+  ASSETS: {
+    path: ROUTES.ASSETS,
+    name: 'Assets',
+    protected: true,
+    description: 'User asset management page'
   },
 } as const;
 

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { requireAuth } from '../middleware/requireAuth.js';
 import {
   getAssets,
   createAsset,
@@ -8,6 +9,9 @@ import {
 } from '../controllers/assets.controller.js';
 
 const router = Router();
+
+// Apply authentication middleware to all routes
+router.use(requireAuth);
 
 // GET /assets - Get all assets for authenticated user
 router.get('/', getAssets);

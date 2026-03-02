@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { useAuth } from '@contexts/index';
+import { ROUTES } from '@routes/routeConfig';
 
 /**
  * Dashboard page - protected route
@@ -33,9 +35,21 @@ export function Dashboard() {
         </div>
 
         <div className="dashboard-card">
+          <h3>📊 Quick Navigation</h3>
+          <div className="navigation-buttons">
+            <Link to={ROUTES.ASSETS} className="nav-button primary">
+              📈 View My Assets
+            </Link>
+            <Link to="/api-test" className="nav-button secondary">
+              🔧 API Test
+            </Link>
+          </div>
+        </div>
+
+        <div className="dashboard-card">
           <h3>Next Steps</h3>
           <ul>
-            <li>Add asset tracking functionality</li>
+            <li>✅ Add asset tracking functionality</li>
             <li>Create asset categories</li>
             <li>Set up user profiles</li>
             <li>Add data visualization</li>

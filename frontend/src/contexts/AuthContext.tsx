@@ -52,8 +52,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         
         // Update JWT token for API calls
         if (session?.access_token) {
+          console.log('Setting API token from auth state change');
           apiService.setToken(session.access_token);
         } else {
+          console.log('Clearing API token due to auth state change');
           apiService.clearToken();
         }
         

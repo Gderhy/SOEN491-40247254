@@ -36,6 +36,9 @@ export function Home() {
               <Link to="/dashboard" className="cta-button">
                 Go to Dashboard
               </Link>
+              <Link to="/assets" className="cta-button">
+                View My Assets
+              </Link>
               <Link to="/api-test" className="cta-button secondary">
                 Test API Connection
               </Link>

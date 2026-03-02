@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, ApiTest } from '@components/index';
-import { Home, Login, Register, Dashboard } from '@pages/index';
+import { Home, Login, Register, Dashboard, AssetsPage } from '@pages/index';
 import { ROUTES } from './routeConfig';
 
 /**
@@ -22,6 +22,15 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path={ROUTES.ASSETS}
+        element={
+          <ProtectedRoute>
+            <AssetsPage />
           </ProtectedRoute>
         } 
       />
