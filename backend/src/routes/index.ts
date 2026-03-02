@@ -7,6 +7,7 @@ import type { Express } from 'express';
 import healthRoutes from './healthRoutes.js';
 import apiRoutes from './apiRoutes.js';
 import authRoutes from './authRoutes.js';
+import assetsRoutes from './assets.routes.js';
 
 /**
  * Setup all application routes
@@ -16,13 +17,17 @@ export function setupRoutes(app: Express): void {
   console.log('Setting up routes...');
   
   try {
-    // API info routes (must be last for root path)
+    // Health routes
     app.use('/health', healthRoutes);
     console.log('✓ Health routes loaded');
     
     // Authentication routes 
     app.use('/', authRoutes);
     console.log('✓ Auth routes loaded');
+    
+    // Assets API routes (protected)
+    app.use('/api/assets', assetsRoutes);
+    console.log('✓ Assets routes loaded');
     
     // API info route (root path)
     app.use('/', apiRoutes);
@@ -38,7 +43,12 @@ export function setupRoutes(app: Express): void {
           'GET /health': 'Basic health check',
           'GET /health/detailed': 'Detailed health check',
           'GET /me': 'Current user info (requires auth)',
-          'GET /auth/validate': 'Validate JWT token (requires auth)'
+          'GET /auth/validate': 'Validate JWT token (requires auth)',
+          'GET /api/assets': 'Get user assets (requires auth)',
+          'POST /api/assets': 'Create new asset (requires auth)',
+          'GET /api/assets/:id': 'Get specific asset (requires auth)',
+          'PUT /api/assets/:id': 'Update asset (requires auth)',
+          'DELETE /api/assets/:id': 'Delete asset (requires auth)'
         }
       });
     });
