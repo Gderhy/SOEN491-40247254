@@ -37,6 +37,9 @@ class ApiService {
         const token = this.getToken();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
+          console.log('API Request with token:', token.substring(0, 20) + '...');
+        } else {
+          console.warn('API Request without token');
         }
         return config;
       },
@@ -48,8 +51,10 @@ class ApiService {
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
+          console.warn('Authentication failed - clearing token');
           this.clearToken();
-          window.location.href = '/login';
+          // Don't automatically redirect - let the component handle it
+          // Components can check for 401 errors and redirect appropriately
         }
         return Promise.reject(error);
       }
@@ -104,6 +109,33 @@ class ApiService {
 
   async validateToken() {
     const response = await this.client.get('/auth/validate');
+    return response.data;
+  }
+
+  // ============ ASSETS ENDPOINTS ============
+  
+  async getAssets() {
+    const response = await this.client.get('/api/assets');
+    return response.data;
+  }
+
+  async createAsset(assetData: any) {
+    const response = await this.client.post('/api/assets', assetData);
+    return response.data;
+  }
+
+  async getAssetById(id: string) {
+    const response = await this.client.get(`/api/assets/${id}`);
+    return response.data;
+  }
+
+  async updateAsset(id: string, assetData: any) {
+    const response = await this.client.put(`/api/assets/${id}`, assetData);
+    return response.data;
+  }
+
+  async deleteAsset(id: string) {
+    const response = await this.client.delete(`/api/assets/${id}`);
     return response.data;
   }
 }
