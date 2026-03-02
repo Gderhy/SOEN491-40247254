@@ -1,49 +1,21 @@
 import express from 'express';
+import cors from 'cors';
 import { config } from './config/env.js';
-import { supabase } from './config/supabase.js';
+import { setupRoutes } from './routes/index.js';
+// Type augmentation is automatically loaded by TypeScript
 
 const app = express();
 
 // Middleware
+app.use(cors({
+  origin: true,
+  credentials: false
+}));
+
 app.use(express.json());
 
-// Health check route
-app.get('/health', (req, res) => {
-  res.json({ ok: true });
-});
-
-// Enhanced health check with Supabase connection test
-app.get("/health/detailed", async (_req, res) => {
-  try {
-    const { data, error } = await supabase.auth.getSession();
-
-    res.json({
-      ok: true,
-      environment: config.nodeEnv,
-      supabase: {
-        connected: !error,
-        error: error?.message || null
-      },
-      timestamp: new Date().toISOString()
-    });
-  } catch (err) {
-    res.status(500).json({
-      ok: false,
-      error: "Health check failed",
-      timestamp: new Date().toISOString()
-    });
-  }
-});
-
-// Basic route
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Asset Tracker Backend API',
-    status: 'running',
-    version: '1.0.0',
-    environment: config.nodeEnv
-  });
-});
+// Setup all routes
+setupRoutes(app);
 
 // Start server
 app.listen(config.port, () => {
