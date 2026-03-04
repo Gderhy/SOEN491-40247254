@@ -12,6 +12,7 @@ export type TransactionType = typeof TransactionType[keyof typeof TransactionTyp
 export interface Transaction {
   id: string;
   userId: string;
+  accountId: string | null;
   symbol: string;
   name: string;
   type: TransactionType;
@@ -26,6 +27,7 @@ export interface Transaction {
 }
 
 export interface CreateTransactionRequest {
+  accountId?: string;
   symbol: string;
   name: string;
   type: TransactionType;
@@ -37,6 +39,7 @@ export interface CreateTransactionRequest {
 }
 
 export interface UpdateTransactionRequest {
+  accountId?: string;
   symbol?: string;
   name?: string;
   type?: TransactionType;

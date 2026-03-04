@@ -13,8 +13,10 @@ export const getTransactions = asyncHandler(async (req: Request, res: Response) 
   if (!userId) {
     throw new AppError(ErrorMessage.USER_NOT_AUTHENTICATED, HttpStatusCode.UNAUTHORIZED);
   }
+
+  const accountId = req.query.accountId as string | undefined;
   
-  const transactions = await TransactionsService.getTransactions(userId);
+  const transactions = await TransactionsService.getTransactions(userId, accountId);
   console.log(`[Transactions] GET /transactions - Returned ${transactions.length} transactions for user: ${userId}`);
 
   sendResponse(res, {
@@ -35,6 +37,7 @@ export const createTransaction = asyncHandler(async (req: Request, res: Response
   const transactionData: CreateTransactionPayload = {
     ...req.body,
     user_id: userId,
+    account_id: req.body.accountId || req.body.account_id || undefined,
     transaction_date: req.body.transaction_date ? new Date(req.body.transaction_date) : new Date()
   };
 

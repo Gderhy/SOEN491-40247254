@@ -18,6 +18,7 @@ function mapTransaction(raw: any): Transaction {
   return {
     id: raw.id,
     userId: raw.user_id,
+    accountId: raw.account_id ?? null,
     symbol: raw.symbol,
     name: raw.name ?? raw.symbol,
     type: raw.type,
@@ -89,6 +90,7 @@ export class TransactionsService {
    */
   static async createTransaction(transaction: CreateTransactionRequest): Promise<Transaction> {
     const response = await apiService.http.post('/api/transactions', {
+      accountId: transaction.accountId,
       symbol: transaction.symbol,
       name: transaction.name ?? transaction.symbol,
       type: transaction.type,
@@ -108,6 +110,7 @@ export class TransactionsService {
    */
   static async updateTransaction(id: string, updates: UpdateTransactionRequest): Promise<Transaction> {
     const response = await apiService.http.put(`/api/transactions/${id}`, {
+      ...(updates.accountId !== undefined && { accountId: updates.accountId }),
       ...(updates.symbol !== undefined && { symbol: updates.symbol }),
       ...(updates.name !== undefined && { name: updates.name }),
       ...(updates.type !== undefined && { type: updates.type }),

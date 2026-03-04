@@ -12,6 +12,7 @@ export enum TransactionType {
 
 export interface Transaction extends BaseEntity {
   user_id: string; // uuid - references auth.users(id)
+  account_id: string | null; // uuid - references trading_accounts(id)
   symbol: string; // trading symbol (e.g., AAPL, BTC, etc.)
   name: string; // asset name (e.g., Apple Inc., Bitcoin)
   type: TransactionType; // 'buy' or 'sell'
@@ -29,6 +30,7 @@ export interface Transaction extends BaseEntity {
  */
 export interface CreateTransactionPayload extends BaseCreatePayload {
   user_id: string;
+  account_id?: string;
   symbol: string;
   name: string;
   type: TransactionType;
@@ -45,6 +47,7 @@ export interface CreateTransactionPayload extends BaseCreatePayload {
  */
 export interface UpdateTransactionPayload extends BaseUpdatePayload {
   user_id: string; // Required for security
+  account_id?: string;
   symbol?: string;
   name?: string;
   type?: TransactionType;

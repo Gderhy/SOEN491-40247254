@@ -9,6 +9,7 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   HOLDINGS: '/holdings',
   TRANSACTIONS: '/transactions',
+  ACCOUNTS: '/accounts',
   API_TEST: '/api-test',
 } as const;
 

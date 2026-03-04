@@ -11,3 +11,6 @@ export * from './tokenService';
 
 // Transactions Service
 export { default as TransactionsService } from './transactionsService';
+
+// Accounts Service (platforms + trading accounts)
+export { default as AccountsService } from './accountsService';

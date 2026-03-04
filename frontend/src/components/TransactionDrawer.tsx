@@ -8,17 +8,20 @@ import React, { useEffect, useState } from 'react';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import { Drawer } from './ui/Drawer';
 import type { Transaction, CreateTransactionRequest, UpdateTransactionRequest } from '../types/transactions';
+import type { TradingAccount } from '../types/accounts';
 import '../styles/transaction-form.css';
 
 export interface TransactionDrawerProps {
   open: boolean;
   mode: 'create' | 'edit';
   transaction?: Transaction | null;
+  accounts: TradingAccount[];
   onClose: () => void;
   onSave: (data: CreateTransactionRequest | UpdateTransactionRequest) => Promise<void>;
 }
 
 interface FormState {
+  accountId: string;
   symbol: string;
   name: string;
   type: 'buy' | 'sell';
@@ -30,6 +33,7 @@ interface FormState {
 }
 
 const EMPTY_FORM: FormState = {
+  accountId: '',
   symbol: '',
   name: '',
   type: 'buy',
@@ -42,6 +46,7 @@ const EMPTY_FORM: FormState = {
 
 function toFormState(t: Transaction): FormState {
   return {
+    accountId: t.accountId ?? '',
     symbol: t.symbol,
     name: t.name ?? t.symbol,
     type: t.type as 'buy' | 'sell',
@@ -57,6 +62,7 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
   open,
   mode,
   transaction,
+  accounts,
   onClose,
   onSave,
 }) => {
@@ -92,6 +98,7 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
 
   const validate = (): boolean => {
     const e: Partial<Record<keyof FormState, string>> = {};
+    if (accounts.length > 0 && !form.accountId) e.accountId = 'Select a trading account';
     if (!form.symbol.trim()) e.symbol = 'Symbol is required';
     if (!form.name.trim()) e.name = 'Name is required';
     if (!form.quantity || isNaN(Number(form.quantity)) || Number(form.quantity) <= 0)
@@ -112,6 +119,7 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
     setSaveError(null);
     try {
       const payload: CreateTransactionRequest = {
+        accountId: form.accountId || undefined,
         symbol: form.symbol.trim().toUpperCase(),
         name: form.name.trim(),
         type: form.type,
@@ -158,6 +166,32 @@ export const TransactionDrawer: React.FC<TransactionDrawerProps> = ({
   return (
     <Drawer open={open} title={title} onClose={onClose} footer={footer}>
       <form id="tx-form" className="tx-form" onSubmit={handleSubmit} noValidate>
+
+        {/* Account selector */}
+        <div className="tx-form__field">
+          <label htmlFor="tx-account">Trading Account <span className="required">*</span></label>
+          {accounts.length === 0 ? (
+            <p className="tx-form__no-accounts">
+              No trading accounts found. <a href="/accounts">Create an account</a> first.
+            </p>
+          ) : (
+            <select
+              id="tx-account"
+              value={form.accountId}
+              onChange={set('accountId')}
+              className={errors.accountId ? 'input--error' : ''}
+            >
+              <option value="">— Select account —</option>
+              {accounts.map(acc => (
+                <option key={acc.id} value={acc.id}>
+                  {acc.platformName} — {acc.accountName}
+                  {acc.currency !== 'CAD' ? ` (${acc.currency})` : ''}
+                </option>
+              ))}
+            </select>
+          )}
+          {errors.accountId && <span className="tx-form__error-msg">{errors.accountId}</span>}
+        </div>
 
         {/* Symbol + Name */}
         <div className="tx-form__row--2col">
