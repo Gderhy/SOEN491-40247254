@@ -49,9 +49,9 @@
 }
 
 .sidebar__logo {
-  font-size: var(--text-2xl);
+  font-size: var(--text-2xl) !important; /* MUI SvgIcon respects font-size */
+  color: var(--color-primary);
   flex-shrink: 0;
-  line-height: 1;
 }
 
 .sidebar__name {
@@ -114,11 +114,13 @@
 }
 
 .sidebar__nav-icon {
-  font-size: var(--text-lg);
+  font-size: var(--text-xl) !important; /* MUI SvgIcon respects font-size */
   flex-shrink: 0;
   width: 24px;
-  text-align: center;
-  line-height: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sidebar__nav-label {
@@ -232,6 +234,9 @@
 }
 
 .topbar__signout {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);

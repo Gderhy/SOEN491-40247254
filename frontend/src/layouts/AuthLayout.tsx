@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded';
 import './AuthLayout.css';
 
 interface AuthLayoutProps {
@@ -37,7 +38,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
       <div className="auth-layout__card">
         {/* Branding strip */}
         <div className="auth-layout__brand">
-          <span className="auth-layout__logo" aria-hidden="true">📈</span>
+          <ShowChartRoundedIcon className="auth-layout__logo" aria-hidden="true" />
           <span className="auth-layout__app-name">Asset Tracker</span>
         </div>
 

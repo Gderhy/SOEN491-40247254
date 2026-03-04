@@ -57,8 +57,9 @@
 }
 
 .auth-layout__logo {
-  font-size: var(--text-2xl);
-  line-height: 1;
+  font-size: var(--text-3xl) !important; /* MUI SvgIcon respects font-size */
+  color: var(--color-primary);
+  flex-shrink: 0;
 }
 
 .auth-layout__app-name {

@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/apiService';
 import { useAuth } from '@/contexts/AuthContext';
 import { PageLayout } from '@layouts/index';
+import { LoadingState } from '@components/index';
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import type { Asset, ApiResponse } from '../types';
 import './AssetsPage.css';
 
@@ -104,10 +107,7 @@ const AssetsPage: React.FC = () => {
   if (state.loading) {
     return (
       <PageLayout title="My Assets">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading your assets...</p>
-        </div>
+        <LoadingState message="Loading your assets…" />
       </PageLayout>
     );
   }
@@ -116,7 +116,7 @@ const AssetsPage: React.FC = () => {
     return (
       <PageLayout title="My Assets">
         <div className="error-container">
-          <div className="error-icon">⚠️</div>
+          <WarningAmberRoundedIcon className="error-icon" />
           <h3>Error Loading Assets</h3>
           <p>{state.error}</p>
           <button
@@ -134,7 +134,7 @@ const AssetsPage: React.FC = () => {
     return (
       <PageLayout title="My Assets">
         <div className="empty-container">
-          <div className="empty-icon">📊</div>
+          <InboxRoundedIcon className="empty-icon" />
           <h3>No Assets Found</h3>
           <p>You haven't added any assets yet. Start building your portfolio!</p>
           <button className="add-asset-button">

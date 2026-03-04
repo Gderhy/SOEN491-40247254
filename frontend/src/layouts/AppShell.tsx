@@ -13,19 +13,28 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/index';
 import { ROUTES } from '@routes/routeConfig';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded';
+import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import type { SvgIconComponent } from '@mui/icons-material';
 import './AppShell.css';
+
 
 /* ── Nav item definition ─────────────────────────────────────── */
 interface NavItem {
   path: string;
   label: string;
-  icon: string;
+  Icon: SvgIconComponent;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { path: ROUTES.DASHBOARD,     label: 'Dashboard',    icon: '🏠' },
-  { path: ROUTES.ASSETS,        label: 'Assets',       icon: '📈' },
-  { path: ROUTES.TRANSACTIONS,  label: 'Transactions', icon: '💰' },
+  { path: ROUTES.DASHBOARD,    label: 'Dashboard',    Icon: DashboardRoundedIcon },
+  { path: ROUTES.ASSETS,       label: 'Assets',       Icon: ShowChartRoundedIcon },
+  { path: ROUTES.TRANSACTIONS, label: 'Transactions', Icon: ReceiptLongRoundedIcon },
 ];
 
 /* ── Component ───────────────────────────────────────────────── */
@@ -64,7 +73,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
       <aside className={`app-shell__sidebar ${mobileOpen ? 'app-shell__sidebar--open' : ''}`}>
         {/* Logo area */}
         <div className="sidebar__brand">
-          <span className="sidebar__logo" aria-hidden="true">📈</span>
+          <ShowChartRoundedIcon className="sidebar__logo" />
           {!collapsed && <span className="sidebar__name">Asset Tracker</span>}
         </div>
 
@@ -81,7 +90,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
                   title={collapsed ? item.label : undefined}
                   onClick={() => setMobileOpen(false)}
                 >
-                  <span className="sidebar__nav-icon" aria-hidden="true">{item.icon}</span>
+                  <item.Icon className="sidebar__nav-icon" aria-hidden="true" />
                   {!collapsed && <span className="sidebar__nav-label">{item.label}</span>}
                 </NavLink>
               </li>
@@ -97,7 +106,10 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <span aria-hidden="true">{collapsed ? '→' : '←'}</span>
+            {collapsed
+              ? <ChevronRightRoundedIcon fontSize="small" />
+              : <ChevronLeftRoundedIcon  fontSize="small" />
+            }
             {!collapsed && <span>Collapse</span>}
           </button>
         </div>
@@ -113,7 +125,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
             onClick={() => setMobileOpen(o => !o)}
             aria-label="Open navigation"
           >
-            <span aria-hidden="true">☰</span>
+            <MenuRoundedIcon />
           </button>
 
           <div className="topbar__spacer" />
@@ -127,7 +139,8 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
               onClick={handleSignOut}
               title="Sign out"
             >
-              Sign Out
+              <LogoutRoundedIcon fontSize="small" />
+              <span>Sign Out</span>
             </button>
           </div>
         </header>

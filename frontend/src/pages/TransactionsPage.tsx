@@ -6,6 +6,13 @@
 import React, { useState, useEffect } from 'react';
 import { TransactionsService } from '../services';
 import { PageLayout } from '@layouts/index';
+import { LoadingState } from '@components/index';
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
+import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import type { Transaction, PortfolioSummary, TransactionFilters } from '../types';
 import '../styles/transactions.css';
 
@@ -72,10 +79,7 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
   if (loading) {
     return (
       <PageLayout title="Transaction History">
-        <div className="loading-state">
-          <div className="spinner"></div>
-          <p>Loading transactions...</p>
-        </div>
+        <LoadingState message="Loading transactions…" />
       </PageLayout>
     );
   }
@@ -84,6 +88,7 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
     return (
       <PageLayout title="Transaction History">
         <div className="error-state">
+          <WarningAmberRoundedIcon className="state-icon state-icon--error" />
           <h2>Error Loading Transactions</h2>
           <p>{error}</p>
           <button onClick={loadData} className="retry-button">
@@ -103,9 +108,11 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
             onClick={() => setShowFilters(!showFilters)}
             className="filter-toggle-button"
           >
+            <FilterListRoundedIcon fontSize="small" />
             {showFilters ? 'Hide Filters' : 'Show Filters'}
           </button>
           <button className="add-transaction-button">
+            <AddRoundedIcon fontSize="small" />
             Add Transaction
           </button>
         </>
@@ -202,9 +209,11 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
 
         {transactions.length === 0 ? (
           <div className="empty-state">
+            <InboxRoundedIcon className="state-icon state-icon--empty" />
             <h3>No Transactions Found</h3>
             <p>You haven't recorded any transactions yet, or no transactions match your current filters.</p>
             <button className="add-first-transaction-button">
+              <AddRoundedIcon fontSize="small" />
               Add Your First Transaction
             </button>
           </div>
@@ -239,8 +248,12 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
                     </td>
                     <td>
                       <div className="action-buttons">
-                        <button className="edit-button" title="Edit">✏️</button>
-                        <button className="delete-button" title="Delete">🗑️</button>
+                        <button className="edit-button" title="Edit">
+                          <EditRoundedIcon fontSize="small" />
+                        </button>
+                        <button className="delete-button" title="Delete">
+                          <DeleteOutlineRoundedIcon fontSize="small" />
+                        </button>
                       </div>
                     </td>
                   </tr>

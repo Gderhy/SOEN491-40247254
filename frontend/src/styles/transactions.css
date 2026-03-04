@@ -31,6 +31,9 @@
 }
 
 .filter-toggle-button, .add-transaction-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: 8px 16px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -266,37 +269,87 @@
 
 .edit-button,
 .delete-button {
-  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-2);
   background: none;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
+  color: var(--color-text-secondary);
+  transition: var(--transition-fast);
 }
 
 .edit-button:hover {
-  background: #eff6ff;
-  border-color: #bfdbfe;
+  background: var(--color-info-bg);
+  border-color: var(--color-info-border);
+  color: var(--color-info);
 }
 
 .delete-button:hover {
-  background: #fef2f2;
-  border-color: #fecaca;
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
 }
 
-/* Empty State */
-.empty-state {
-  padding: 60px 40px;
+/* ── Shared state icons (error / empty) ───────────────────────── */
+.state-icon {
+  font-size: 3.5rem !important; /* MUI SvgIcon */
+  margin-bottom: var(--space-2);
+}
+
+.state-icon--error {
+  color: var(--color-danger);
+}
+
+.state-icon--empty {
+  color: var(--color-text-muted);
+}
+
+/* ── Error State ──────────────────────────────────────────────── */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  padding: var(--space-12) var(--space-6);
   text-align: center;
-  color: #6b7280;
+  gap: var(--space-4);
+}
+
+.error-state h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-danger);
+}
+
+.error-state p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  max-width: 400px;
+}
+
+/* ── Empty State ──────────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  gap: var(--space-4);
 }
 
 .empty-state h3 {
-  margin: 0 0 12px 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #374151;
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
 }
 
 .empty-state p {
@@ -305,88 +358,29 @@
   line-height: 1.5;
 }
 
+/* ── Add Transaction / First Transaction buttons ─────────────── */
 .add-first-transaction-button {
-  padding: 12px 24px;
-  background: #3b82f6;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: var(--transition-fast);
 }
 
 .add-first-transaction-button:hover {
-  background: #2563eb;
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
-/* Loading State */
-.loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  color: #6b7280;
-}
-
-.spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid #e5e7eb;
-  border-top: 3px solid #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-state p {
-  margin: 0;
-  font-size: 16px;
-}
-
-/* Error State */
-.error-state {
-  text-align: center;
-  padding: 60px 40px;
-  color: #dc2626;
-}
-
-.error-state h2 {
-  margin: 0 0 12px 0;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.error-state p {
-  margin: 0 0 24px 0;
-  font-size: 16px;
-  color: #6b7280;
-}
-
-.retry-button {
-  padding: 12px 24px;
-  background: #dc2626;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.retry-button:hover {
-  background: #b91c1c;
-}
-
-/* Responsive Design */
+/* ── Responsive Design ───────────────────────────────────────── */
 @media (max-width: 768px) {
   .transactions-page {
     padding: 16px;

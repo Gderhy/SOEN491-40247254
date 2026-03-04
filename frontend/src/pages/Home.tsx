@@ -1,5 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@contexts/index';
+import { LoadingState } from '@components/index';
+import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
+import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
+import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
+import LockRoundedIcon from '@mui/icons-material/LockRounded';
+import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 
 /**
  * Home page component
@@ -9,54 +18,52 @@ export function Home() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   return (
     <div className="home-container">
       <header className="home-header">
-        <h1>🏠 Asset Tracker</h1>
+        <ShowChartRoundedIcon className="home-header__icon" />
+        <h1>Asset Tracker</h1>
         <p>Track and manage your assets with ease</p>
       </header>
 
       <main className="home-content">
         {user ? (
-          // User is logged in
           <div className="home-card">
             <h2>Welcome back, {user.email}!</h2>
             <p>You're already signed in.</p>
             <div className="home-buttons">
               <Link to="/dashboard" className="cta-button">
+                <DashboardRoundedIcon fontSize="small" />
                 Go to Dashboard
               </Link>
               <Link to="/assets" className="cta-button">
+                <ShowChartRoundedIcon fontSize="small" />
                 View My Assets
               </Link>
               <Link to="/api-test" className="cta-button secondary">
+                <ApiRoundedIcon fontSize="small" />
                 Test API Connection
               </Link>
             </div>
           </div>
         ) : (
-          // User is not logged in
           <div className="home-card">
             <h2>Get Started</h2>
             <p>Sign in to access your asset tracking dashboard.</p>
             <div className="home-buttons">
               <Link to="/login" className="cta-button">
+                <LoginRoundedIcon fontSize="small" />
                 Sign In
               </Link>
               <Link to="/register" className="cta-button secondary">
+                <PersonAddRoundedIcon fontSize="small" />
                 Create Account
               </Link>
               <Link to="/api-test" className="cta-button secondary">
+                <ApiRoundedIcon fontSize="small" />
                 Test API
               </Link>
             </div>
@@ -68,15 +75,18 @@ export function Home() {
         <h3>Features</h3>
         <div className="feature-grid">
           <div className="feature-item">
-            <h4>📊 Track Assets</h4>
+            <BarChartRoundedIcon className="feature-icon" />
+            <h4>Track Assets</h4>
             <p>Monitor your assets in real-time</p>
           </div>
           <div className="feature-item">
-            <h4>🔐 Secure</h4>
+            <LockRoundedIcon className="feature-icon" />
+            <h4>Secure</h4>
             <p>Your data is protected with authentication</p>
           </div>
           <div className="feature-item">
-            <h4>📱 Responsive</h4>
+            <DevicesRoundedIcon className="feature-icon" />
+            <h4>Responsive</h4>
             <p>Access from any device</p>
           </div>
         </div>
