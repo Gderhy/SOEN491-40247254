@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { TransactionsService } from '../services';
+import { AccountsService } from '../services';
 import { PageLayout } from '@layouts/index';
 import { LoadingState, TransactionDrawer, DeleteConfirmModal } from '@components/index';
 import { useSnackbar } from '@components/ui';
@@ -21,6 +22,7 @@ import type {
   CreateTransactionRequest,
   UpdateTransactionRequest,
 } from '../types';
+import type { TradingAccount } from '../types/accounts';
 import '../styles/transactions.css';
 
 interface TransactionsPageProps {}
@@ -31,6 +33,7 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
   /* ─── Data state ───────────────────────────────────────────── */
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [portfolio, setPortfolio] = useState<PortfolioSummary | null>(null);
+  const [accounts, setAccounts] = useState<TradingAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,12 +55,14 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
     try {
       setLoading(true);
       setError(null);
-      const [transactionsData, portfolioData] = await Promise.all([
+      const [transactionsData, portfolioData, accountsData] = await Promise.all([
         TransactionsService.getTransactions(filters),
         TransactionsService.getPortfolioSummary(),
+        AccountsService.getAccounts(),
       ]);
       setTransactions(transactionsData);
       setPortfolio(portfolioData);
+      setAccounts(accountsData);
     } catch (err) {
       console.error('Failed to load transactions:', err);
       setError(err instanceof Error ? err.message : 'Failed to load data');
@@ -318,6 +323,7 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
         open={drawerOpen}
         mode={drawerMode}
         transaction={editingTransaction}
+        accounts={accounts}
         onClose={() => setDrawerOpen(false)}
         onSave={handleSave}
       />

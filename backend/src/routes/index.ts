@@ -8,6 +8,8 @@ import healthRoutes from './healthRoutes.js';
 import apiRoutes from './apiRoutes.js';
 import authRoutes from './authRoutes.js';
 import transactionsRoutes from './transactions.routes.js';
+import tradingPlatformsRoutes from './trading-platforms.routes.js';
+import tradingAccountsRoutes from './trading-accounts.routes.js';
 
 /**
  * Setup all application routes
@@ -28,6 +30,14 @@ export function setupRoutes(app: Express): void {
     // Transactions API routes (protected)
     app.use('/api/transactions', transactionsRoutes);
     console.log('✓ Transactions routes loaded');
+
+    // Trading platforms routes (protected)
+    app.use('/api/trading-platforms', tradingPlatformsRoutes);
+    console.log('✓ Trading platforms routes loaded');
+
+    // Trading accounts routes (protected)
+    app.use('/api/trading-accounts', tradingAccountsRoutes);
+    console.log('✓ Trading accounts routes loaded');
     
     // API info route (root path)
     app.use('/', apiRoutes);
@@ -49,7 +59,13 @@ export function setupRoutes(app: Express): void {
           'GET /api/transactions/:id': 'Get specific transaction (requires auth)',
           'PUT /api/transactions/:id': 'Update transaction (requires auth)',
           'DELETE /api/transactions/:id': 'Delete transaction (requires auth)',
-          'GET /api/transactions/portfolio': 'Get portfolio summary (requires auth)'
+          'GET /api/transactions/portfolio': 'Get portfolio holdings (requires auth)',
+          'GET /api/trading-platforms': 'Get trading platforms (requires auth)',
+          'POST /api/trading-platforms': 'Create trading platform (requires auth)',
+          'DELETE /api/trading-platforms/:id': 'Delete trading platform (requires auth)',
+          'GET /api/trading-accounts': 'Get trading accounts (requires auth)',
+          'POST /api/trading-accounts': 'Create trading account (requires auth)',
+          'DELETE /api/trading-accounts/:id': 'Delete trading account (requires auth)'
         }
       });
     });

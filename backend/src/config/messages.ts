@@ -22,7 +22,17 @@ export enum ErrorMessage {
   INVALID_INPUT_FORMAT = 'Invalid input format',
 
   // User errors
-  USER_ID_REQUIRED = 'User ID is required'
+  USER_ID_REQUIRED = 'User ID is required',
+
+  // Trading platform / account errors
+  PLATFORM_NOT_FOUND = 'Trading platform not found',
+  PLATFORM_NAME_REQUIRED = 'Platform name is required',
+  PLATFORM_ALREADY_EXISTS = 'A platform with that name already exists',
+  ACCOUNT_NOT_FOUND = 'Trading account not found',
+  ACCOUNT_NAME_REQUIRED = 'Account name is required',
+  ACCOUNT_ALREADY_EXISTS = 'An account with that name already exists for this platform',
+  PLATFORM_ID_REQUIRED = 'Platform ID is required',
+  ACCOUNT_HAS_TRANSACTIONS = 'Cannot delete account: it still has transactions linked to it'
 }
 
 export enum SuccessMessage {
@@ -38,6 +48,16 @@ export enum SuccessMessage {
   // Auth messages
   USER_RETRIEVED = 'User retrieved successfully',
   TOKEN_VALID = 'Token is valid',
+
+  // Trading platform messages
+  PLATFORMS_RETRIEVED = 'Trading platforms retrieved successfully',
+  PLATFORM_CREATED = 'Trading platform created successfully',
+  PLATFORM_DELETED = 'Trading platform deleted successfully',
+
+  // Trading account messages
+  ACCOUNTS_RETRIEVED = 'Trading accounts retrieved successfully',
+  ACCOUNT_CREATED = 'Trading account created successfully',
+  ACCOUNT_DELETED = 'Trading account deleted successfully',
 
   // Generic messages
   OPERATION_SUCCESSFUL = 'Operation completed successfully',

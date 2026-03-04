@@ -5,7 +5,7 @@ import { ErrorMessage } from '../config/messages.js';
 import { supabase } from '../config/supabase.js';
 
 export class TransactionsService {
-  static async getTransactions(userId: string): Promise<Transaction[]> {
+  static async getTransactions(userId: string, accountId?: string): Promise<Transaction[]> {
     if (!userId) {
       throw new AppError(ErrorMessage.USER_ID_REQUIRED, HttpStatusCode.BAD_REQUEST);
     }
@@ -13,11 +13,17 @@ export class TransactionsService {
     try {
       console.log('Fetching transactions for user:', userId);
       
-      const { data, error } = await supabase
+      let query = supabase
         .from('transactions')
         .select('*')
         .eq('user_id', userId)
         .order('transaction_date', { ascending: false });
+
+      if (accountId) {
+        query = query.eq('account_id', accountId);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Supabase error:', error);
@@ -58,6 +64,7 @@ export class TransactionsService {
         .from('transactions')
         .insert({
           user_id: transactionData.user_id,
+          account_id: transactionData.account_id || null,
           symbol: transactionData.symbol.toUpperCase(),
           name: transactionData.name,
           type: transactionData.type,
