@@ -3,7 +3,7 @@
  * Handles all transaction-related API calls
  */
 
-import { apiClient } from './apiClient';
+import { apiService } from './apiService';
 import type { 
   Transaction, 
   CreateTransactionRequest, 
@@ -11,6 +11,23 @@ import type {
   PortfolioSummary,
   TransactionFilters
 } from '../types/transactions';
+
+/** Map a raw backend row (snake_case) to the frontend Transaction shape (camelCase) */
+function mapTransaction(raw: any): Transaction {
+  return {
+    id: raw.id,
+    userId: raw.user_id,
+    symbol: raw.symbol,
+    type: raw.type,
+    quantity: Number(raw.quantity),
+    pricePerUnit: Number(raw.price_per_unit),
+    totalAmount: Number(raw.total_amount),
+    date: new Date(raw.transaction_date),
+    notes: raw.notes ?? undefined,
+    createdAt: new Date(raw.created_at),
+    updatedAt: new Date(raw.updated_at),
+  };
+}
 
 export class TransactionsService {
   /**
@@ -27,64 +44,76 @@ export class TransactionsService {
     if (filters?.maxAmount) params.append('maxAmount', filters.maxAmount.toString());
     
     const queryString = params.toString();
-    const url = queryString ? `api/transactions?${queryString}` : 'api/transactions';
+    const url = queryString ? `/api/transactions?${queryString}` : '/api/transactions';
 
-    const response = await apiClient.get<{ data: Transaction[] }>(url);
-    return response?.data?.data ?? [];
+    const response = await apiService.http.get(url);
+    const rows: any[] = response.data?.data ?? [];
+    return rows.map(mapTransaction);
   }
 
   /**
    * Get a specific transaction by ID
    */
   static async getTransaction(id: string): Promise<Transaction> {
-    const response = await apiClient.get<{ data: Transaction }>(`api/transactions/${id}`);
-    if (!response?.data?.data) {
-      throw new Error('Transaction not found or invalid response format');
-    }
-    return response.data.data;
+    const response = await apiService.http.get(`/api/transactions/${id}`);
+    const raw = response.data?.data;
+    if (!raw) throw new Error('Transaction not found or invalid response format');
+    return mapTransaction(raw);
   }
 
   /**
    * Create a new transaction
    */
   static async createTransaction(transaction: CreateTransactionRequest): Promise<Transaction> {
-    const response = await apiClient.post<{ data: Transaction }>('api/transactions', transaction);
-    if (!response?.data?.data) {
-      throw new Error('Failed to create transaction or invalid response format');
-    }
-    return response.data.data;
+    const response = await apiService.http.post('/api/transactions', {
+      symbol: transaction.symbol,
+      name: transaction.symbol, // backend requires name; default to symbol
+      type: transaction.type,
+      quantity: transaction.quantity,
+      price_per_unit: transaction.pricePerUnit,
+      transaction_date: transaction.date ?? new Date(),
+      notes: transaction.notes,
+    });
+    const raw = response.data?.data;
+    if (!raw) throw new Error('Failed to create transaction or invalid response format');
+    return mapTransaction(raw);
   }
 
   /**
    * Update an existing transaction
    */
   static async updateTransaction(id: string, updates: UpdateTransactionRequest): Promise<Transaction> {
-    const response = await apiClient.put<{ data: Transaction }>(`api/transactions/${id}`, updates);
-    if (!response?.data?.data) {
-      throw new Error('Failed to update transaction or invalid response format');
-    }
-    return response.data.data;
+    const response = await apiService.http.put(`/api/transactions/${id}`, {
+      ...(updates.symbol !== undefined && { symbol: updates.symbol }),
+      ...(updates.type !== undefined && { type: updates.type }),
+      ...(updates.quantity !== undefined && { quantity: updates.quantity }),
+      ...(updates.pricePerUnit !== undefined && { price_per_unit: updates.pricePerUnit }),
+      ...(updates.date !== undefined && { transaction_date: updates.date }),
+      ...(updates.notes !== undefined && { notes: updates.notes }),
+    });
+    const raw = response.data?.data;
+    if (!raw) throw new Error('Failed to update transaction or invalid response format');
+    return mapTransaction(raw);
   }
 
   /**
    * Delete a transaction
    */
   static async deleteTransaction(id: string): Promise<void> {
-    await apiClient.delete(`/transactions/${id}`);
+    await apiService.http.delete(`/api/transactions/${id}`);
   }
 
   /**
    * Get portfolio summary with positions and performance
    */
   static async getPortfolioSummary(): Promise<PortfolioSummary> {
-    const response = await apiClient.get<{ data: any }>('api/transactions/metrics');
-    if (!response?.data?.data) {
+    const response = await apiService.http.get('/api/transactions/metrics');
+    const metrics = response.data?.data;
+
+    if (!metrics) {
       throw new Error('Failed to get portfolio summary or invalid response format');
     }
     
-    const metrics = response.data.data;
-    
-    // Map backend PortfolioMetrics to frontend PortfolioSummary
     return {
       totalInvested: metrics.total_invested || 0,
       currentValue: metrics.current_value,
@@ -98,7 +127,7 @@ export class TransactionsService {
         currentValue: pos.current_value,
         unrealizedPnL: pos.unrealized_pnl,
         unrealizedPnLPercent: pos.unrealized_pnl_percentage,
-        transactions: [] // Transactions would need to be fetched separately if needed
+        transactions: []
       })),
       lastUpdated: new Date()
     };
