@@ -1,0 +1,221 @@
+/**
+ * Transaction form styles
+ * Used by TransactionDrawer – the form fields rendered inside the generic Drawer.
+ */
+
+/* ── Form layout ────────────────────────────────────────────── */
+.tx-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Two-column row */
+.tx-form__row--2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* ── Field wrapper ──────────────────────────────────────────── */
+.tx-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tx-form__field label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text);
+}
+
+.tx-form__field .required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+.tx-form__field .optional {
+  color: var(--color-text-muted);
+  font-weight: var(--font-normal);
+  font-size: var(--text-xs);
+  margin-left: 4px;
+}
+
+.tx-form__field input,
+.tx-form__field select,
+.tx-form__field textarea {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: var(--transition-fast);
+  font-family: var(--font-sans);
+  line-height: var(--leading-normal);
+}
+
+.tx-form__field input:focus,
+.tx-form__field select:focus,
+.tx-form__field textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.tx-form__field input.input--error,
+.tx-form__field select.input--error,
+.tx-form__field textarea.input--error {
+  border-color: var(--color-danger);
+}
+
+.tx-form__field textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.tx-form__error-msg {
+  font-size: var(--text-xs);
+  color: var(--color-danger);
+}
+
+/* ── $ prefix wrapper ───────────────────────────────────────── */
+.tx-form__prefix-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tx-form__prefix {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  pointer-events: none;
+  user-select: none;
+}
+
+.tx-form__prefix-wrap input {
+  width: 100%;
+  padding-left: calc(var(--space-3) + 12px);
+}
+
+/* ── Buy / Sell toggle ──────────────────────────────────────── */
+.tx-form__type-toggle {
+  display: flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.tx-form__type-btn {
+  flex: 1;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  border: none;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  transition: var(--transition-fast);
+}
+
+.tx-form__type-btn + .tx-form__type-btn {
+  border-left: 1px solid var(--color-border);
+}
+
+.tx-form__type-btn--buy.tx-form__type-btn--active {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.tx-form__type-btn--sell.tx-form__type-btn--active {
+  background: #fee2e2;
+  color: var(--color-danger);
+}
+
+/* ── Estimated total banner ─────────────────────────────────── */
+.tx-form__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+}
+
+.tx-form__total-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-medium);
+}
+
+.tx-form__total-value {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+}
+
+.tx-form__total-value--buy  { color: var(--color-danger); }
+.tx-form__total-value--sell { color: var(--color-success); }
+
+/* ── Form-level error banner ────────────────────────────────── */
+.tx-form__save-error {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+}
+
+/* ── Footer action buttons ──────────────────────────────────── */
+.tx-form__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.tx-form__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tx-form__btn--cancel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.tx-form__btn--cancel:hover:not(:disabled) {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.tx-form__btn--save {
+  background: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.tx-form__btn--save:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .tx-form__row--2col {
+    grid-template-columns: 1fr;
+  }
+}

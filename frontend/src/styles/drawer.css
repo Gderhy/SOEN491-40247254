@@ -1,0 +1,130 @@
+/**
+ * Drawer – reusable slide-in panel
+ * Used by any feature that needs a side-panel form or detail view.
+ */
+
+/* ── Backdrop ───────────────────────────────────────────────── */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: var(--z-overlay);
+  pointer-events: none;
+  transition: background var(--transition-normal);
+}
+
+.drawer-backdrop--visible {
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+/* ── Panel ──────────────────────────────────────────────────── */
+.drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--drawer-width, 480px);
+  max-width: 100vw;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xl);
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-color: var(--color-border);
+  border-style: solid;
+  border-width: 0;
+}
+
+/* Placement variants */
+.drawer--right {
+  right: 0;
+  transform: translateX(100%);
+  border-left-width: 1px;
+}
+
+.drawer--left {
+  left: 0;
+  transform: translateX(-100%);
+  border-right-width: 1px;
+}
+
+.drawer--open {
+  transform: translateX(0);
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+  flex-shrink: 0;
+}
+
+.drawer__title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+}
+
+.drawer__subtitle {
+  margin: var(--space-1) 0 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.drawer__close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.drawer__close-btn:hover {
+  background: var(--color-border-light);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* ── Body ───────────────────────────────────────────────────── */
+.drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.drawer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  flex-shrink: 0;
+}
+
+.drawer__footer--space-between {
+  justify-content: space-between;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .drawer {
+    width: 100vw !important;
+  }
+}

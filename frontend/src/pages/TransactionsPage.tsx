@@ -7,6 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { TransactionsService } from '../services';
 import { PageLayout } from '@layouts/index';
 import { LoadingState, TransactionDrawer, DeleteConfirmModal } from '@components/index';
+import { useSnackbar } from '@components/ui';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded';
@@ -25,6 +26,8 @@ import '../styles/transactions.css';
 interface TransactionsPageProps {}
 
 export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
+  const { showSnackbar } = useSnackbar();
+
   /* ─── Data state ───────────────────────────────────────────── */
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [portfolio, setPortfolio] = useState<PortfolioSummary | null>(null);
@@ -81,8 +84,10 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
   const handleSave = async (data: CreateTransactionRequest | UpdateTransactionRequest) => {
     if (drawerMode === 'create') {
       await TransactionsService.createTransaction(data as CreateTransactionRequest);
+      showSnackbar({ severity: 'success', message: 'Transaction added successfully.' });
     } else if (editingTransaction) {
       await TransactionsService.updateTransaction(editingTransaction.id, data as UpdateTransactionRequest);
+      showSnackbar({ severity: 'success', message: 'Transaction updated successfully.' });
     }
     await loadData();
   };
@@ -96,6 +101,7 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
   const handleDelete = async () => {
     if (!deletingTransaction) return;
     await TransactionsService.deleteTransaction(deletingTransaction.id);
+    showSnackbar({ severity: 'success', message: 'Transaction deleted.' });
     await loadData();
   };
 
