@@ -93,6 +93,13 @@ Migration files are stored in `database/migrations/` with naming convention:
 3. `003_create_transactions_table.sql`: Creates the transactions table with indexes, triggers, and constraints
 4. `004_enable_rls_transactions.sql`: Enables Row Level Security for transactions table
 5. `005_insert_sample_transactions.sql`: Inserts sample transaction data for testing/demo
+6. `006_insert_user_transactions.sql`: Inserts per-user transaction data for testing/demo
+7. `007_portfolio_holdings_function.sql`: Creates `get_portfolio_holdings(uuid)` — a Postgres function
+   that aggregates transactions into per-symbol holdings **entirely inside the database** using
+   `GROUP BY` + conditional `SUM`. Called via `supabase.rpc()` from the backend service.
+
+> ⚠️ **Migration 007 must be run before the `/api/transactions/portfolio` endpoint will work.**
+> Paste the contents of `007_portfolio_holdings_function.sql` into the Supabase SQL editor and execute it.
 
 ### Migration Execution Order
 Run migrations in numerical order to ensure proper database setup:

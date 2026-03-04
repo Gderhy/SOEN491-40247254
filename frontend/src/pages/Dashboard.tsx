@@ -45,7 +45,7 @@ export function Dashboard() {
             Quick Navigation
           </h3>
           <div className="navigation-buttons">
-            <Link to={ROUTES.ASSETS} className="nav-button primary">
+            <Link to={ROUTES.HOLDINGS} className="nav-button primary">
               <ShowChartRoundedIcon fontSize="small" />
               View My Assets
             </Link>

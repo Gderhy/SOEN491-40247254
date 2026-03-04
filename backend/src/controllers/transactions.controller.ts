@@ -90,7 +90,7 @@ export const getTransactionById = asyncHandler(async (req: Request, res: Respons
   console.log(`[Transactions] GET /transactions/${id} - Requested by user: ${userId}`);
 
   if (!id || Array.isArray(id)) {
-    throw new AppError(ErrorMessage.INVALID_ASSET_ID, HttpStatusCode.BAD_REQUEST);
+    throw new AppError(ErrorMessage.INVALID_INPUT_FORMAT, HttpStatusCode.BAD_REQUEST);
   }
 
   if (!userId) {
@@ -113,7 +113,7 @@ export const updateTransaction = asyncHandler(async (req: Request, res: Response
   console.log(`[Transactions] PUT /transactions/${id} - Update requested by user: ${userId}`);
 
   if (!id || Array.isArray(id)) {
-    throw new AppError(ErrorMessage.INVALID_ASSET_ID, HttpStatusCode.BAD_REQUEST);
+    throw new AppError(ErrorMessage.INVALID_INPUT_FORMAT, HttpStatusCode.BAD_REQUEST);
   }
 
   if (!userId) {
@@ -142,7 +142,7 @@ export const deleteTransaction = asyncHandler(async (req: Request, res: Response
   console.log(`[Transactions] DELETE /transactions/${id} - Delete requested by user: ${userId}`);
 
   if (!id || Array.isArray(id)) {
-    throw new AppError(ErrorMessage.INVALID_ASSET_ID, HttpStatusCode.BAD_REQUEST);
+    throw new AppError(ErrorMessage.INVALID_INPUT_FORMAT, HttpStatusCode.BAD_REQUEST);
   }
 
   if (!userId) {
@@ -157,3 +157,4 @@ export const deleteTransaction = asyncHandler(async (req: Request, res: Response
     message: SuccessMessage.TRANSACTION_DELETED
   });
 });
+

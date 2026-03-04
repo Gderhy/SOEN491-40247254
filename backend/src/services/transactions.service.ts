@@ -1,4 +1,4 @@
-import { Transaction, CreateTransactionPayload, UpdateTransactionPayload, PortfolioPosition, PortfolioMetrics, TransactionType } from '../models/Transaction.js';
+import { Transaction, CreateTransactionPayload, UpdateTransactionPayload, PortfolioPosition, PortfolioMetrics } from '../models/Transaction.js';
 import { AppError } from '../errors/AppError.js';
 import { HttpStatusCode } from '../config/httpStatus.js';
 import { ErrorMessage } from '../config/messages.js';
@@ -91,93 +91,39 @@ export class TransactionsService {
     }
 
     try {
-      const transactions = await this.getTransactions(userId);
-      
-      // Group transactions by symbol
-      const positionMap = new Map<string, PortfolioPosition>();
-      
-      for (const transaction of transactions) {
-        const symbol = transaction.symbol;
-        
-        if (!positionMap.has(symbol)) {
-          positionMap.set(symbol, {
-            symbol: symbol,
-            name: transaction.name,
-            total_quantity: 0,
-            average_buy_price: 0,
-            total_invested: 0,
-            total_fees: 0,
-            first_purchase_date: transaction.transaction_date,
-            last_transaction_date: transaction.transaction_date,
-            transaction_count: 0,
-            realized_pnl: 0
-          });
-        }
-        
-        const position = positionMap.get(symbol)!;
-        
-        // Update transaction count
-        position.transaction_count++;
-        
-        // Update dates
-        if (transaction.transaction_date < position.first_purchase_date) {
-          position.first_purchase_date = transaction.transaction_date;
-        }
-        if (transaction.transaction_date > position.last_transaction_date) {
-          position.last_transaction_date = transaction.transaction_date;
-        }
-        
-        // Add fees
-        position.total_fees += transaction.fees || 0;
-        
-        if (transaction.type === TransactionType.BUY) {
-          // Calculate new average buy price
-          const currentValue = position.total_quantity * position.average_buy_price;
-          const newValue = transaction.quantity * transaction.price_per_unit;
-          const newTotalQuantity = position.total_quantity + transaction.quantity;
-          
-          if (newTotalQuantity > 0) {
-            position.average_buy_price = (currentValue + newValue) / newTotalQuantity;
-          }
-          
-          position.total_quantity += transaction.quantity;
-          position.total_invested += transaction.total_amount;
-        } else if (transaction.type === TransactionType.SELL) {
-          // Calculate realized P&L
-          const sellValue = transaction.quantity * transaction.price_per_unit;
-          const costBasis = transaction.quantity * position.average_buy_price;
-          const realizedPnl = sellValue - costBasis;
-          
-          position.realized_pnl = (position.realized_pnl || 0) + realizedPnl;
-          position.total_quantity -= transaction.quantity;
-          position.total_invested -= costBasis;
-        }
+      // All aggregation is done inside Postgres via the get_portfolio_holdings() function.
+      // The DB computes net quantity, weighted-average cost, realized P&L, and fees
+      // using a single GROUP-BY query — no row-by-row JS looping needed.
+      const { data, error } = await supabase.rpc('get_portfolio_holdings', {
+        p_user_id: userId,
+      });
+
+      if (error) {
+        console.error('Supabase RPC error (get_portfolio_holdings):', error);
+        throw new AppError(`Database error: ${error.message}`, HttpStatusCode.INTERNAL_SERVER_ERROR);
       }
-      
-      // Convert map to array and add current prices
-      const positions = Array.from(positionMap.values()).map(position => {
-        // TODO: Integrate with a real market data API (e.g., Alpha Vantage, Yahoo Finance, etc.)
-        // For now, using average buy price as current price placeholder
-        const currentPrice = position.average_buy_price; // Replace with API call
-        const currentValue = position.total_quantity * currentPrice;
-        const unrealizedPnl = currentValue - (position.total_quantity * position.average_buy_price);
-        const unrealizedPnlPercentage = position.average_buy_price > 0 ? 
-          (unrealizedPnl / (position.total_quantity * position.average_buy_price)) * 100 : 0;
-        
-        return {
-          ...position,
-          current_price: currentPrice,
-          current_value: currentValue,
-          unrealized_pnl: unrealizedPnl,
-          unrealized_pnl_percentage: unrealizedPnlPercentage
-        };
-      }).filter(position => position.total_quantity > 0); // Only show positions with holdings
-      
-      return positions;
+
+      const rows: any[] = data || [];
+
+      return rows.map(row => ({
+        symbol:                row.symbol,
+        name:                  row.name ?? row.symbol,
+        total_quantity:        Number(row.total_quantity),
+        average_buy_price:     Number(row.average_buy_price),
+        total_invested:        Number(row.total_invested),
+        realized_pnl:          Number(row.realized_pnl),
+        total_fees:            Number(row.total_fees),
+        transaction_count:     Number(row.transaction_count),
+        first_purchase_date:   new Date(row.first_purchase_date),
+        last_transaction_date: new Date(row.last_transaction_date),
+        // current_price / current_value / unrealized_pnl left for a future market-data integration
+        current_price:              undefined,
+        current_value:              undefined,
+        unrealized_pnl:             undefined,
+        unrealized_pnl_percentage:  undefined,
+      }));
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      }
+      if (error instanceof AppError) throw error;
       throw new AppError('Failed to calculate portfolio positions', HttpStatusCode.INTERNAL_SERVER_ERROR);
     }
   }

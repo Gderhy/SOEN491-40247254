@@ -33,7 +33,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { path: ROUTES.DASHBOARD,    label: 'Dashboard',    Icon: DashboardRoundedIcon },
-  { path: ROUTES.ASSETS,       label: 'Assets',       Icon: ShowChartRoundedIcon },
+  { path: ROUTES.HOLDINGS,     label: 'Holdings',     Icon: ShowChartRoundedIcon },
   { path: ROUTES.TRANSACTIONS, label: 'Transactions', Icon: ReceiptLongRoundedIcon },
 ];
 
