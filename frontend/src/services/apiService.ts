@@ -116,33 +116,6 @@ class ApiService {
     const response = await this.client.get('/auth/validate');
     return response.data;
   }
-
-  // ============ ASSETS ENDPOINTS ============
-  
-  async getAssets() {
-    const response = await this.client.get('/api/assets');
-    return response.data;
-  }
-
-  async createAsset(assetData: any) {
-    const response = await this.client.post('/api/assets', assetData);
-    return response.data;
-  }
-
-  async getAssetById(id: string) {
-    const response = await this.client.get(`/api/assets/${id}`);
-    return response.data;
-  }
-
-  async updateAsset(id: string, assetData: any) {
-    const response = await this.client.put(`/api/assets/${id}`, assetData);
-    return response.data;
-  }
-
-  async deleteAsset(id: string) {
-    const response = await this.client.delete(`/api/assets/${id}`);
-    return response.data;
-  }
 }
 
 // Export singleton instance

@@ -1,5 +1,5 @@
 /**
- * Assets Page
+ * Holdings Page
  * Shows each stock/crypto holding aggregated from the user's transaction history.
  * One row per symbol: net quantity, avg cost, total invested, realised P&L, fees.
  */
@@ -16,9 +16,9 @@ import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import TrendingDownRoundedIcon from '@mui/icons-material/TrendingDownRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import type { PortfolioPosition } from '../types';
-import './AssetsPage.css';
+import './HoldingsPage.css';
 
-const AssetsPage: React.FC = () => {
+const HoldingsPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, session } = useAuth();
 
@@ -98,7 +98,7 @@ const AssetsPage: React.FC = () => {
           <InboxRoundedIcon className="empty-icon" />
           <h3>No Holdings Yet</h3>
           <p>Your holdings will appear here once you add transactions. Each stock or crypto you've bought (net of sells) shows up as one row.</p>
-          <button className="add-asset-button" onClick={() => navigate('/transactions')}>
+          <button className="add-holding-button" onClick={() => navigate('/transactions')}>
             <AddRoundedIcon fontSize="small" />
             Go to Transactions
           </button>
@@ -135,8 +135,8 @@ const AssetsPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="assets-table-container">
-        <table className="assets-table">
+      <div className="holdings-table-container">
+        <table className="holdings-table">
           <thead>
             <tr>
               <th>Symbol / Name</th>
@@ -153,14 +153,14 @@ const AssetsPage: React.FC = () => {
             {positions.map(pos => {
               const pnl = pos.realizedPnL ?? 0;
               return (
-                <tr key={pos.symbol} className="asset-row">
-                  <td className="asset-name">
+                <tr key={pos.symbol} className="holding-row">
+                  <td className="holding-name">
                     <div className="holdings-symbol">{pos.symbol}</div>
                     <div className="holdings-name">{pos.name}</div>
                   </td>
-                  <td className="ta-right asset-quantity">{fmtQty(pos.totalQuantity)}</td>
+                  <td className="ta-right holding-quantity">{fmtQty(pos.totalQuantity)}</td>
                   <td className="ta-right">{fmt(pos.averageBuyPrice)}</td>
-                  <td className="ta-right asset-value">{fmt(pos.totalInvested)}</td>
+                  <td className="ta-right holding-value">{fmt(pos.totalInvested)}</td>
                   <td className="ta-right">
                     <span className={`holdings-pnl ${pnl >= 0 ? 'holdings-pnl--pos' : 'holdings-pnl--neg'}`}>
                       {pnl >= 0
@@ -182,4 +182,4 @@ const AssetsPage: React.FC = () => {
   );
 };
 
-export default AssetsPage;
+export default HoldingsPage;

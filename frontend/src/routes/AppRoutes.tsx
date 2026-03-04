@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { ProtectedRoute, ApiTest } from '@components/index';
-import { Home, Login, Register, Dashboard, AssetsPage, TransactionsPage } from '@pages/index';
+import { Home, Login, Register, Dashboard, HoldingsPage, TransactionsPage } from '@pages/index';
 import { AppShell } from '@layouts/index';
 import { ROUTES } from './routeConfig';
 
@@ -34,7 +34,7 @@ export function AppRoutes() {
       {/* Protected routes – all share the AppShell layout */}
       <Route element={<AppShellLayout />}>
         <Route path={ROUTES.DASHBOARD}    element={<Dashboard />} />
-        <Route path={ROUTES.ASSETS}       element={<AssetsPage />} />
+        <Route path={ROUTES.HOLDINGS}     element={<HoldingsPage />} />
         <Route path={ROUTES.TRANSACTIONS} element={<TransactionsPage />} />
       </Route>
 
