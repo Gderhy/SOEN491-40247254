@@ -62,7 +62,7 @@ import { AssetsPage } from '../pages';
 import { ROUTES } from '../routes/routeConfig';
 
 // Navigate to assets page
-<Link to={ROUTES.ASSETS}>View Assets</Link>
+<Link to={ROUTES.HOLDINGS}>View Assets</Link>
 ```
 
 ### **3. API Integration:**
