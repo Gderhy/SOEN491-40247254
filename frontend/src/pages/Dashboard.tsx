@@ -40,6 +40,9 @@ export function Dashboard() {
             <Link to={ROUTES.ASSETS} className="nav-button primary">
               📈 View My Assets
             </Link>
+            <Link to={ROUTES.TRANSACTIONS} className="nav-button primary">
+              💰 Transaction History
+            </Link>
             <Link to="/api-test" className="nav-button secondary">
               🔧 API Test
             </Link>

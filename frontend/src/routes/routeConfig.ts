@@ -8,6 +8,7 @@ export const ROUTES = {
   REGISTER: '/register',
   DASHBOARD: '/dashboard',
   ASSETS: '/assets',
+  TRANSACTIONS: '/transactions',
   API_TEST: '/api-test',
 } as const;
 
@@ -51,6 +52,12 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     name: 'Assets',
     protected: true,
     description: 'User asset management page'
+  },
+  TRANSACTIONS: {
+    path: ROUTES.TRANSACTIONS,
+    name: 'Transactions',
+    protected: true,
+    description: 'Transaction history and portfolio tracking'
   },
 } as const;
 

@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, ApiTest } from '@components/index';
-import { Home, Login, Register, Dashboard, AssetsPage } from '@pages/index';
+import { Home, Login, Register, Dashboard, AssetsPage, TransactionsPage } from '@pages/index';
 import { ROUTES } from './routeConfig';
 
 /**
@@ -31,6 +31,15 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <AssetsPage />
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path={ROUTES.TRANSACTIONS}
+        element={
+          <ProtectedRoute>
+            <TransactionsPage />
           </ProtectedRoute>
         } 
       />
