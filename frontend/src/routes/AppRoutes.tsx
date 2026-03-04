@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { ProtectedRoute, ApiTest } from '@components/index';
-import { Home, Login, Register, Dashboard, HoldingsPage, TransactionsPage } from '@pages/index';
+import { Home, Login, Register, Dashboard, HoldingsPage, TransactionsPage, AccountsPage } from '@pages/index';
 import { AppShell } from '@layouts/index';
 import { ROUTES } from './routeConfig';
 
@@ -36,6 +36,7 @@ export function AppRoutes() {
         <Route path={ROUTES.DASHBOARD}    element={<Dashboard />} />
         <Route path={ROUTES.HOLDINGS}     element={<HoldingsPage />} />
         <Route path={ROUTES.TRANSACTIONS} element={<TransactionsPage />} />
+        <Route path={ROUTES.ACCOUNTS}     element={<AccountsPage />} />
       </Route>
 
       {/* Fallback route - redirect unknown paths to home */}

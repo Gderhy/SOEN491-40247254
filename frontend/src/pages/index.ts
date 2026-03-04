@@ -13,3 +13,6 @@ export { default as HoldingsPage } from './HoldingsPage';
 
 // Export TransactionsPage
 export { default as TransactionsPage } from './TransactionsPage';
+
+// Export AccountsPage
+export { default as AccountsPage } from './AccountsPage';
