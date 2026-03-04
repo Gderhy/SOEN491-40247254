@@ -43,7 +43,20 @@ export enum SuccessMessage {
   ASSET_UPDATED = 'Asset updated successfully',
   ASSET_DELETED = 'Asset deleted successfully',
   ASSET_RETRIEVED = 'Asset retrieved successfully',
-  
+
+  // Transaction messages
+  TRANSACTIONS_RETRIEVED = 'Transactions retrieved successfully',
+  TRANSACTION_CREATED = 'Transaction created successfully',
+  TRANSACTION_UPDATED = 'Transaction updated successfully',
+  TRANSACTION_DELETED = 'Transaction deleted successfully',
+  TRANSACTION_RETRIEVED = 'Transaction retrieved successfully',
+  PORTFOLIO_POSITIONS_RETRIEVED = 'Portfolio positions retrieved successfully',
+  PORTFOLIO_METRICS_RETRIEVED = 'Portfolio metrics retrieved successfully',
+
+  // Auth messages
+  USER_RETRIEVED = 'User retrieved successfully',
+  TOKEN_VALID = 'Token is valid',
+
   // Generic messages
   OPERATION_SUCCESSFUL = 'Operation completed successfully',
   DATA_SAVED = 'Data saved successfully',

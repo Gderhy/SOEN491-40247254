@@ -79,19 +79,19 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <div className="transactions-page">
-  //       <div className="error-state">
-  //         <h2>Error Loading Transactions</h2>
-  //         <p>{error}</p>
-  //         <button onClick={loadData} className="retry-button">
-  //           Try Again
-  //         </button>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (error) {
+    return (
+      <div className="transactions-page">
+        <div className="error-state">
+          <h2>Error Loading Transactions</h2>
+          <p>{error}</p>
+          <button onClick={loadData} className="retry-button">
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="transactions-page">

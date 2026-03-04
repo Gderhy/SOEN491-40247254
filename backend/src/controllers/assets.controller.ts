@@ -8,13 +8,15 @@ import { HttpStatusCode, ErrorMessage, SuccessMessage } from '../config/index.js
 
 export const getAssets = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  
+  console.log(`[Assets] GET /assets - Requested by user: ${userId}`);
+
   if (!userId) {
     throw new AppError(ErrorMessage.USER_NOT_AUTHENTICATED, HttpStatusCode.UNAUTHORIZED);
   }
   
   const assets = await AssetsService.getAssets(userId);
-  
+  console.log(`[Assets] GET /assets - Returned ${assets.length} assets for user: ${userId}`);
+
   sendResponse(res, {
     statusCode: HttpStatusCode.OK,
     message: SuccessMessage.ASSETS_RETRIEVED,
@@ -24,7 +26,8 @@ export const getAssets = asyncHandler(async (req: Request, res: Response) => {
 
 export const createAsset = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  
+  console.log(`[Assets] POST /assets - Create asset requested by user: ${userId}`);
+
   if (!userId) {
     throw new AppError(ErrorMessage.USER_NOT_AUTHENTICATED, HttpStatusCode.UNAUTHORIZED);
   }
@@ -35,6 +38,7 @@ export const createAsset = asyncHandler(async (req: Request, res: Response) => {
   };
 
   const newAsset = await AssetsService.createAsset(assetData);
+  console.log(`[Assets] POST /assets - Asset created with id: ${newAsset.id} for user: ${userId}`);
 
   sendResponse(res, {
     statusCode: HttpStatusCode.CREATED,
@@ -46,6 +50,7 @@ export const createAsset = asyncHandler(async (req: Request, res: Response) => {
 export const getAssetById = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id;
   const userId = req.user?.id;
+  console.log(`[Assets] GET /assets/${id} - Requested by user: ${userId}`);
 
   if (!id || Array.isArray(id)) {
     throw new AppError(ErrorMessage.INVALID_ASSET_ID, HttpStatusCode.BAD_REQUEST);
@@ -56,6 +61,7 @@ export const getAssetById = asyncHandler(async (req: Request, res: Response) => 
   }
 
   const asset = await AssetsService.getAssetById(id, userId);
+  console.log(`[Assets] GET /assets/${id} - Asset found for user: ${userId}`);
 
   sendResponse(res, {
     statusCode: HttpStatusCode.OK,
@@ -67,6 +73,7 @@ export const getAssetById = asyncHandler(async (req: Request, res: Response) => 
 export const updateAsset = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id;
   const userId = req.user?.id;
+  console.log(`[Assets] PUT /assets/${id} - Update requested by user: ${userId}`);
 
   if (!id || Array.isArray(id)) {
     throw new AppError(ErrorMessage.INVALID_ASSET_ID, HttpStatusCode.BAD_REQUEST);
@@ -82,6 +89,7 @@ export const updateAsset = asyncHandler(async (req: Request, res: Response) => {
   };
 
   const updatedAsset = await AssetsService.updateAsset(id, updateData);
+  console.log(`[Assets] PUT /assets/${id} - Asset updated for user: ${userId}`);
 
   sendResponse(res, {
     statusCode: HttpStatusCode.OK,
@@ -93,6 +101,7 @@ export const updateAsset = asyncHandler(async (req: Request, res: Response) => {
 export const deleteAsset = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id;
   const userId = req.user?.id;
+  console.log(`[Assets] DELETE /assets/${id} - Delete requested by user: ${userId}`);
 
   if (!id || Array.isArray(id)) {
     throw new AppError(ErrorMessage.INVALID_ASSET_ID, HttpStatusCode.BAD_REQUEST);
@@ -103,6 +112,7 @@ export const deleteAsset = asyncHandler(async (req: Request, res: Response) => {
   }
 
   await AssetsService.deleteAsset(id, userId);
+  console.log(`[Assets] DELETE /assets/${id} - Asset deleted for user: ${userId}`);
 
   sendResponse(res, {
     statusCode: HttpStatusCode.OK,

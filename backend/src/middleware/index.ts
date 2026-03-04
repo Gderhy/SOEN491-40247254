@@ -4,3 +4,4 @@
  */
 
 export * from './requireAuth.js';
+export * from './requestLogger.js';

@@ -16,6 +16,12 @@ export const errorHandler = (
     message = err.message;
   }
 
+  if (statusCode >= 500) {
+    console.error(`[Error] ${req.method} ${req.originalUrl} — ${statusCode} ${message}`, err.stack);
+  } else {
+    console.warn(`[Error] ${req.method} ${req.originalUrl} — ${statusCode} ${message}`);
+  }
+
   res.status(statusCode).json({
     status: ResponseStatus.ERROR,
     message
