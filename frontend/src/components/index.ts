@@ -6,3 +6,5 @@
 export * from './ProtectedRoute';
 export * from './ApiTest';
 export * from './LoadingState';
+export * from './TransactionDrawer';
+export * from './DeleteConfirmModal';

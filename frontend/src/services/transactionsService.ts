@@ -18,11 +18,13 @@ function mapTransaction(raw: any): Transaction {
     id: raw.id,
     userId: raw.user_id,
     symbol: raw.symbol,
+    name: raw.name ?? raw.symbol,
     type: raw.type,
     quantity: Number(raw.quantity),
     pricePerUnit: Number(raw.price_per_unit),
     totalAmount: Number(raw.total_amount),
     date: new Date(raw.transaction_date),
+    fees: raw.fees != null ? Number(raw.fees) : undefined,
     notes: raw.notes ?? undefined,
     createdAt: new Date(raw.created_at),
     updatedAt: new Date(raw.updated_at),
@@ -67,11 +69,12 @@ export class TransactionsService {
   static async createTransaction(transaction: CreateTransactionRequest): Promise<Transaction> {
     const response = await apiService.http.post('/api/transactions', {
       symbol: transaction.symbol,
-      name: transaction.symbol, // backend requires name; default to symbol
+      name: transaction.name ?? transaction.symbol,
       type: transaction.type,
       quantity: transaction.quantity,
       price_per_unit: transaction.pricePerUnit,
       transaction_date: transaction.date ?? new Date(),
+      fees: transaction.fees,
       notes: transaction.notes,
     });
     const raw = response.data?.data;
@@ -85,10 +88,12 @@ export class TransactionsService {
   static async updateTransaction(id: string, updates: UpdateTransactionRequest): Promise<Transaction> {
     const response = await apiService.http.put(`/api/transactions/${id}`, {
       ...(updates.symbol !== undefined && { symbol: updates.symbol }),
+      ...(updates.name !== undefined && { name: updates.name }),
       ...(updates.type !== undefined && { type: updates.type }),
       ...(updates.quantity !== undefined && { quantity: updates.quantity }),
       ...(updates.pricePerUnit !== undefined && { price_per_unit: updates.pricePerUnit }),
       ...(updates.date !== undefined && { transaction_date: updates.date }),
+      ...(updates.fees !== undefined && { fees: updates.fees }),
       ...(updates.notes !== undefined && { notes: updates.notes }),
     });
     const raw = response.data?.data;

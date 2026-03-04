@@ -13,11 +13,13 @@ export interface Transaction {
   id: string;
   userId: string;
   symbol: string;
+  name: string;
   type: TransactionType;
   quantity: number;
   pricePerUnit: number;
   totalAmount: number;
   date: Date;
+  fees?: number;
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -25,19 +27,23 @@ export interface Transaction {
 
 export interface CreateTransactionRequest {
   symbol: string;
+  name: string;
   type: TransactionType;
   quantity: number;
   pricePerUnit: number;
   date?: Date;
+  fees?: number;
   notes?: string;
 }
 
 export interface UpdateTransactionRequest {
   symbol?: string;
+  name?: string;
   type?: TransactionType;
   quantity?: number;
   pricePerUnit?: number;
   date?: Date;
+  fees?: number;
   notes?: string;
 }
 
