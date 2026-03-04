@@ -5,9 +5,12 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   backend:
-    name: Backend - install, build
+    name: Backend - install, build, test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,6 +31,12 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Test with coverage
+        run: npm run test:coverage
 
   frontend:
     name: Frontend - install, build

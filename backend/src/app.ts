@@ -26,11 +26,13 @@ app.use(errorHandler);
 
 export default app;
 
-// Start server
-app.listen(config.port, () => {
-  console.log(`🚀 Server running on port ${config.port}`);
-  console.log(`🌍 Environment: ${config.nodeEnv}`);
-  console.log(`📍 Health check available at: http://localhost:${config.port}/health`);
-  console.log(`📍 Detailed health check: http://localhost:${config.port}/health/detailed`);
-  console.log(`📍 API info available at: http://localhost:${config.port}/`);
-});
+// Start server (skip in test environment)
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(config.port, () => {
+    console.log(`🚀 Server running on port ${config.port}`);
+    console.log(`🌍 Environment: ${config.nodeEnv}`);
+    console.log(`📍 Health check available at: http://localhost:${config.port}/health`);
+    console.log(`📍 Detailed health check: http://localhost:${config.port}/health/detailed`);
+    console.log(`📍 API info available at: http://localhost:${config.port}/`);
+  });
+}
