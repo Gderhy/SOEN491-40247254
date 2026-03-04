@@ -49,13 +49,19 @@ export interface UpdateTransactionRequest {
 
 export interface PortfolioPosition {
   symbol: string;
+  name: string;
   totalQuantity: number;
-  averageCost: number;
+  averageBuyPrice: number;
   totalInvested: number;
+  currentPrice?: number;
   currentValue?: number;
   unrealizedPnL?: number;
   unrealizedPnLPercent?: number;
-  transactions: Transaction[];
+  realizedPnL?: number;
+  totalFees: number;
+  firstPurchaseDate: Date;
+  lastTransactionDate: Date;
+  transactionCount: number;
 }
 
 export interface PortfolioSummary {

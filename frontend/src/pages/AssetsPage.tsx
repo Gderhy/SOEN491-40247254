@@ -1,144 +1,106 @@
 /**
- * Assets Page Component
- * Displays user's assets in a table format with loading, error, and empty states
+ * Assets Page
+ * Shows each stock/crypto holding aggregated from the user's transaction history.
+ * One row per symbol: net quantity, avg cost, total invested, realised P&L, fees.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiService } from '../services/apiService';
 import { useAuth } from '@/contexts/AuthContext';
+import { TransactionsService } from '../services';
 import { PageLayout } from '@layouts/index';
 import { LoadingState } from '@components/index';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
-import type { Asset, ApiResponse } from '../types';
+import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
+import TrendingDownRoundedIcon from '@mui/icons-material/TrendingDownRounded';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import type { PortfolioPosition } from '../types';
 import './AssetsPage.css';
-
-interface AssetsPageState {
-  assets: Asset[];
-  loading: boolean;
-  error: string | null;
-}
 
 const AssetsPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, session } = useAuth();
-  const [state, setState] = useState<AssetsPageState>({
-    assets: [],
-    loading: true,
-    error: null,
-  });
+
+  const [positions, setPositions] = useState<PortfolioPosition[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await TransactionsService.getPortfolioPositions();
+      setPositions(data);
+    } catch (err: any) {
+      if (err?.response?.status === 401) {
+        navigate('/login');
+        return;
+      }
+      setError(err?.response?.data?.message ?? err?.message ?? 'Failed to load holdings');
+    } finally {
+      setLoading(false);
+    }
+  }, [navigate]);
 
   useEffect(() => {
-    // Check if user is authenticated
-    if (!user || !session) {
-      navigate('/login');
-      return;
-    }
+    if (!user || !session) { navigate('/login'); return; }
+    load();
+  }, [user, session, navigate, load]);
 
-    const fetchAssets = async () => {
-      try {
-        setState(prev => ({ ...prev, loading: true, error: null }));
-        
-        const response: ApiResponse<Asset[]> = await apiService.getAssets();
-        
-        if (response.status === 'success' && response.data) {
-          setState(prev => ({
-            ...prev,
-            assets: response.data || [],
-            loading: false,
-            error: null,
-          }));
-        } else {
-          setState(prev => ({
-            ...prev,
-            assets: [],
-            loading: false,
-            error: response.message || 'Failed to fetch assets',
-          }));
-        }
-      } catch (error: any) {
-        console.error('Error fetching assets:', error);
-        
-        // Handle authentication errors
-        if (error?.response?.status === 401) {
-          console.log('Authentication failed, redirecting to login');
-          navigate('/login');
-          return;
-        }
-        
-        const errorMessage = error?.response?.data?.message || 
-                            error?.message || 
-                            'An unexpected error occurred while fetching assets';
-        
-        setState(prev => ({
-          ...prev,
-          assets: [],
-          loading: false,
-          error: errorMessage,
-        }));
-      }
-    };
-
-    fetchAssets();
-  }, [user, session, navigate]);
-
-  const formatDate = (dateString: string): string => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
-  const formatCurrency = (value: number, currency: string = 'CAD'): string => {
-    return new Intl.NumberFormat('en-CA', {
+  /* ── helpers ─────────────────────────────────────────────── */
+  const fmt = (n: number, digits = 2) =>
+    new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency,
-    }).format(value);
-  };
+      currency: 'USD',
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    }).format(n);
 
-  if (state.loading) {
+  const fmtQty = (n: number) =>
+    new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 8 }).format(n);
+
+  const fmtDate = (d: Date) =>
+    new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+  /* ── summary totals ─────────────────────────────────────── */
+  const totalInvested = positions.reduce((s, p) => s + p.totalInvested, 0);
+  const totalValue    = positions.reduce((s, p) => s + (p.currentValue ?? p.totalInvested), 0);
+  const totalPnL      = positions.reduce((s, p) => s + (p.realizedPnL ?? 0), 0);
+  const totalFees     = positions.reduce((s, p) => s + p.totalFees, 0);
+
+  /* ── render ─────────────────────────────────────────────── */
+  if (loading) {
     return (
-      <PageLayout title="My Assets">
-        <LoadingState message="Loading your assets…" />
+      <PageLayout title="My Holdings">
+        <LoadingState message="Loading your holdings…" />
       </PageLayout>
     );
   }
 
-  if (state.error) {
+  if (error) {
     return (
-      <PageLayout title="My Assets">
+      <PageLayout title="My Holdings">
         <div className="error-container">
           <WarningAmberRoundedIcon className="error-icon" />
-          <h3>Error Loading Assets</h3>
-          <p>{state.error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="retry-button"
-          >
-            Try Again
-          </button>
+          <h3>Error Loading Holdings</h3>
+          <p>{error}</p>
+          <button onClick={load} className="retry-button">Try Again</button>
         </div>
       </PageLayout>
     );
   }
 
-  if (state.assets.length === 0) {
+  if (positions.length === 0) {
     return (
-      <PageLayout title="My Assets">
+      <PageLayout title="My Holdings">
         <div className="empty-container">
           <InboxRoundedIcon className="empty-icon" />
-          <h3>No Assets Found</h3>
-          <p>You haven't added any assets yet. Start building your portfolio!</p>
-          <button className="add-asset-button">
-            Add Your First Asset
+          <h3>No Holdings Yet</h3>
+          <p>Your holdings will appear here once you add transactions. Each stock or crypto you've bought (net of sells) shows up as one row.</p>
+          <button className="add-asset-button" onClick={() => navigate('/transactions')}>
+            <AddRoundedIcon fontSize="small" />
+            Go to Transactions
           </button>
         </div>
       </PageLayout>
@@ -147,62 +109,72 @@ const AssetsPage: React.FC = () => {
 
   return (
     <PageLayout
-      title="My Assets"
-      subtitle={`${state.assets.length} ${state.assets.length === 1 ? 'asset' : 'assets'}`}
+      title="My Holdings"
+      subtitle={`${positions.length} ${positions.length === 1 ? 'position' : 'positions'} · derived from transaction history`}
     >
+      {/* Summary bar */}
+      <div className="holdings-summary">
+        <div className="holdings-summary__stat">
+          <span className="holdings-summary__label">Total Invested</span>
+          <span className="holdings-summary__value">{fmt(totalInvested)}</span>
+        </div>
+        <div className="holdings-summary__stat">
+          <span className="holdings-summary__label">Current Value</span>
+          <span className="holdings-summary__value">{fmt(totalValue)}</span>
+        </div>
+        <div className="holdings-summary__stat">
+          <span className="holdings-summary__label">Realized P&amp;L</span>
+          <span className={`holdings-summary__value ${totalPnL >= 0 ? 'positive' : 'negative'}`}>
+            {totalPnL >= 0 ? '+' : ''}{fmt(totalPnL)}
+          </span>
+        </div>
+        <div className="holdings-summary__stat">
+          <span className="holdings-summary__label">Total Fees</span>
+          <span className="holdings-summary__value">{fmt(totalFees)}</span>
+        </div>
+      </div>
 
+      {/* Table */}
       <div className="assets-table-container">
         <table className="assets-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Symbol</th>
-              <th>Quantity</th>
-              <th>Value</th>
-              <th>Currency</th>
-              <th>Source</th>
-              <th>Created</th>
+              <th>Symbol / Name</th>
+              <th className="ta-right">Quantity</th>
+              <th className="ta-right">Avg Cost</th>
+              <th className="ta-right">Total Invested</th>
+              <th className="ta-right">Realized P&amp;L</th>
+              <th className="ta-right">Fees</th>
+              <th className="ta-right"># Trades</th>
+              <th>Last Trade</th>
             </tr>
           </thead>
           <tbody>
-            {state.assets.map((asset) => (
-              <tr key={asset.id} className="asset-row">
-                <td className="asset-name">
-                  <strong>{asset.name}</strong>
-                </td>
-                <td className="asset-type">
-                  <span className={`type-badge type-${asset.type.toLowerCase()}`}>
-                    {asset.type}
-                  </span>
-                </td>
-                <td className="asset-symbol">
-                  {asset.symbol || '—'}
-                </td>
-                <td className="asset-quantity">
-                  {asset.quantity !== undefined ? 
-                    new Intl.NumberFormat('en-US', {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 8,
-                    }).format(asset.quantity) : '—'
-                  }
-                </td>
-                <td className="asset-value">
-                  {formatCurrency(asset.value, asset.currency)}
-                </td>
-                <td className="asset-currency">
-                  {asset.currency}
-                </td>
-                <td className="asset-source">
-                  <span className={`source-badge source-${asset.source.toLowerCase()}`}>
-                    {asset.source}
-                  </span>
-                </td>
-                <td className="asset-created">
-                  {formatDate(asset.created_at)}
-                </td>
-              </tr>
-            ))}
+            {positions.map(pos => {
+              const pnl = pos.realizedPnL ?? 0;
+              return (
+                <tr key={pos.symbol} className="asset-row">
+                  <td className="asset-name">
+                    <div className="holdings-symbol">{pos.symbol}</div>
+                    <div className="holdings-name">{pos.name}</div>
+                  </td>
+                  <td className="ta-right asset-quantity">{fmtQty(pos.totalQuantity)}</td>
+                  <td className="ta-right">{fmt(pos.averageBuyPrice)}</td>
+                  <td className="ta-right asset-value">{fmt(pos.totalInvested)}</td>
+                  <td className="ta-right">
+                    <span className={`holdings-pnl ${pnl >= 0 ? 'holdings-pnl--pos' : 'holdings-pnl--neg'}`}>
+                      {pnl >= 0
+                        ? <TrendingUpRoundedIcon style={{ fontSize: '1rem' }} />
+                        : <TrendingDownRoundedIcon style={{ fontSize: '1rem' }} />}
+                      {pnl >= 0 ? '+' : ''}{fmt(pnl)}
+                    </span>
+                  </td>
+                  <td className="ta-right">{pos.totalFees > 0 ? fmt(pos.totalFees) : '—'}</td>
+                  <td className="ta-right">{pos.transactionCount}</td>
+                  <td>{fmtDate(pos.lastTransactionDate)}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

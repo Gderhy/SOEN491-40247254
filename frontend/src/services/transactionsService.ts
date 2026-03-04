@@ -9,6 +9,7 @@ import type {
   CreateTransactionRequest, 
   UpdateTransactionRequest,
   PortfolioSummary,
+  PortfolioPosition,
   TransactionFilters
 } from '../types/transactions';
 
@@ -28,6 +29,26 @@ function mapTransaction(raw: any): Transaction {
     notes: raw.notes ?? undefined,
     createdAt: new Date(raw.created_at),
     updatedAt: new Date(raw.updated_at),
+  };
+}
+
+/** Map a raw backend position row to the frontend PortfolioPosition shape */
+function mapPosition(pos: any): PortfolioPosition {
+  return {
+    symbol: pos.symbol,
+    name: pos.name ?? pos.symbol,
+    totalQuantity: Number(pos.total_quantity) || 0,
+    averageBuyPrice: Number(pos.average_buy_price) || 0,
+    totalInvested: Number(pos.total_invested) || 0,
+    currentPrice: pos.current_price != null ? Number(pos.current_price) : undefined,
+    currentValue: pos.current_value != null ? Number(pos.current_value) : undefined,
+    unrealizedPnL: pos.unrealized_pnl != null ? Number(pos.unrealized_pnl) : undefined,
+    unrealizedPnLPercent: pos.unrealized_pnl_percentage != null ? Number(pos.unrealized_pnl_percentage) : undefined,
+    realizedPnL: pos.realized_pnl != null ? Number(pos.realized_pnl) : undefined,
+    totalFees: Number(pos.total_fees) || 0,
+    firstPurchaseDate: new Date(pos.first_purchase_date),
+    lastTransactionDate: new Date(pos.last_transaction_date),
+    transactionCount: Number(pos.transaction_count) || 0,
   };
 }
 
@@ -124,16 +145,7 @@ export class TransactionsService {
       currentValue: metrics.current_value,
       totalUnrealizedPnL: metrics.total_unrealized_pnl,
       totalUnrealizedPnLPercent: metrics.total_unrealized_pnl_percentage,
-      positions: (metrics.positions || []).map((pos: any) => ({
-        symbol: pos.symbol,
-        totalQuantity: pos.total_quantity || 0,
-        averageCost: pos.average_buy_price || 0,
-        totalInvested: pos.total_invested || 0,
-        currentValue: pos.current_value,
-        unrealizedPnL: pos.unrealized_pnl,
-        unrealizedPnLPercent: pos.unrealized_pnl_percentage,
-        transactions: []
-      })),
+      positions: (metrics.positions || []).map(mapPosition),
       lastUpdated: new Date()
     };
   }
@@ -143,6 +155,15 @@ export class TransactionsService {
    */
   static async getTransactionsBySymbol(symbol: string): Promise<Transaction[]> {
     return this.getTransactions({ symbol });
+  }
+
+  /**
+   * Get aggregated portfolio positions (one row per symbol, derived from transactions)
+   */
+  static async getPortfolioPositions(): Promise<PortfolioPosition[]> {
+    const response = await apiService.http.get('/api/transactions/portfolio');
+    const rows: any[] = response.data?.data ?? [];
+    return rows.map(mapPosition);
   }
 }
 
