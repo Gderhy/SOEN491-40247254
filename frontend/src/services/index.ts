@@ -8,3 +8,6 @@ export { apiService } from './apiService';
 
 // Token Service  
 export * from './tokenService';
+
+// Transactions Service
+export { default as TransactionsService } from './transactionsService';

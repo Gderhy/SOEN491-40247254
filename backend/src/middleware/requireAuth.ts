@@ -21,6 +21,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     const authHeader = req.headers.authorization;
     
     if (!authHeader) {
+      console.warn(`[Auth] ${req.method} ${req.originalUrl} — rejected: missing Authorization header`);
       res.status(401).json({ 
         error: 'Unauthorized',
         message: 'Missing Authorization header'
@@ -31,6 +32,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     // Check Bearer token format
     const tokenMatch = authHeader.match(/^Bearer\s+(.+)$/);
     if (!tokenMatch) {
+      console.warn(`[Auth] ${req.method} ${req.originalUrl} — rejected: invalid Authorization header format`);
       res.status(401).json({ 
         error: 'Unauthorized',
         message: 'Invalid Authorization header format. Expected: Bearer <token>'
@@ -44,13 +46,15 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     const { data, error } = await supabase.auth.getUser(token);
 
     if (error || !data.user) {
-      console.error('Token validation failed:', error?.message);
+      console.warn(`[Auth] ${req.method} ${req.originalUrl} — rejected: ${error?.message ?? 'no user found'}`);
       res.status(401).json({ 
         error: 'Unauthorized',
         message: 'Invalid or expired token'
       });
       return;
     }
+
+    console.log(`[Auth] ${req.method} ${req.originalUrl} — authenticated user: ${data.user.id}`);
 
     // Attach user to request object
     (req as any).user = data.user;
@@ -59,7 +63,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     next();
     
   } catch (err) {
-    console.error('Authentication middleware error:', err);
+    console.error(`[Auth] ${req.method} ${req.originalUrl} — middleware error:`, err);
     res.status(500).json({ 
       error: 'Internal Server Error',
       message: 'Failed to process authentication'

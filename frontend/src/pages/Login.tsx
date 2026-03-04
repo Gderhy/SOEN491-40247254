@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/config/supabase';
 import { validateLoginForm } from '@/utils/index';
+import { AuthLayout } from '@layouts/index';
 import type { LoginFormData, FormErrors } from '@/types/auth';
 
 /**
@@ -66,63 +67,60 @@ export function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Sign In</h1>
-        <p>Welcome back to Asset Tracker</p>
+    <AuthLayout
+      title="Sign In"
+      subtitle="Welcome back to Asset Tracker"
+      footer={
+        <p>
+          Don't have an account?{' '}
+          <Link to="/register">Sign up here</Link>
+        </p>
+      }
+    >
+      <form onSubmit={handleSubmit} className="auth-form">
+        {errors.general && (
+          <div className="error-message">{errors.general}</div>
+        )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          {errors.general && (
-            <div className="error-message">{errors.general}</div>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className={errors.email ? 'error' : ''}
-              placeholder="Enter your email"
-              disabled={loading}
-            />
-            {errors.email && <span className="field-error">{errors.email}</span>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className={errors.password ? 'error' : ''}
-              placeholder="Enter your password"
-              disabled={loading}
-            />
-            {errors.password && <span className="field-error">{errors.password}</span>}
-          </div>
-
-          <button 
-            type="submit" 
-            className="auth-button"
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            className={errors.email ? 'error' : ''}
+            placeholder="Enter your email"
             disabled={loading}
-          >
-            {loading ? 'Signing In...' : 'Sign In'}
-          </button>
-        </form>
-
-        <div className="auth-links">
-          <p>
-            Don't have an account? {' '}
-            <Link to="/register">Sign up here</Link>
-          </p>
+          />
+          {errors.email && <span className="field-error">{errors.email}</span>}
         </div>
-      </div>
-    </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            className={errors.password ? 'error' : ''}
+            placeholder="Enter your password"
+            disabled={loading}
+          />
+          {errors.password && <span className="field-error">{errors.password}</span>}
+        </div>
+
+        <button
+          type="submit"
+          className="auth-button"
+          disabled={loading}
+        >
+          {loading ? 'Signing In...' : 'Sign In'}
+        </button>
+      </form>
+    </AuthLayout>
   );
 }
 

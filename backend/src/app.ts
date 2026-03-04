@@ -3,11 +3,14 @@ import cors from 'cors';
 import { config } from './config/env.js';
 import { setupRoutes } from './routes/index.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { requestLogger } from './middleware/requestLogger.js';
 // Type augmentation is automatically loaded by TypeScript
 
 const app = express();
 
-// Middleware
+// Middleware — request logger must be first
+app.use(requestLogger);
+
 app.use(cors({
   origin: true,
   credentials: false

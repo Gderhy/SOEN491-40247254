@@ -1,0 +1,205 @@
+/**
+ * Snackbar / Toast – reusable notification system
+ * Supports: success | error | warning | info
+ */
+
+/* ── Container ──────────────────────────────────────────────── */
+.snackbar-container {
+  position: fixed;
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+/* Placement variants */
+.snackbar-container--bottom-center {
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+.snackbar-container--bottom-right {
+  bottom: var(--space-6);
+  right: var(--space-6);
+  align-items: flex-end;
+}
+
+.snackbar-container--bottom-left {
+  bottom: var(--space-6);
+  left: var(--space-6);
+  align-items: flex-start;
+}
+
+.snackbar-container--top-center {
+  top: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+.snackbar-container--top-right {
+  top: var(--space-6);
+  right: var(--space-6);
+  align-items: flex-end;
+}
+
+/* ── Individual snackbar ────────────────────────────────────── */
+.snackbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  min-width: 280px;
+  max-width: 440px;
+  pointer-events: auto;
+  border: 1px solid transparent;
+
+  /* Entry animation */
+  animation: snackbar-in 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.snackbar--exiting {
+  animation: snackbar-out 0.2s ease forwards;
+}
+
+/* ── Variants ───────────────────────────────────────────────── */
+.snackbar--success {
+  background: var(--color-success-bg);
+  border-color: var(--color-success-border);
+  color: var(--color-success);
+}
+
+.snackbar--error {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+
+.snackbar--warning {
+  background: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
+  color: var(--color-warning);
+}
+
+.snackbar--info {
+  background: var(--color-info-bg);
+  border-color: var(--color-info-border);
+  color: var(--color-info);
+}
+
+/* ── Parts ──────────────────────────────────────────────────── */
+.snackbar__icon {
+  flex-shrink: 0;
+  font-size: 1.25rem !important; /* MUI SvgIcon override */
+}
+
+.snackbar__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.snackbar__title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
+}
+
+.snackbar__message {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+.snackbar__title + .snackbar__message {
+  margin-top: var(--space-1);
+}
+
+.snackbar__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: currentColor;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.snackbar__close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* ── Progress bar (auto-dismiss) ────────────────────────────── */
+.snackbar__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: currentColor;
+  opacity: 0.35;
+  animation: snackbar-progress linear forwards;
+}
+
+/* ── Keyframes ──────────────────────────────────────────────── */
+@keyframes snackbar-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes snackbar-out {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(16px) scale(0.97);
+  }
+}
+
+@keyframes snackbar-progress {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .snackbar-container--bottom-center,
+  .snackbar-container--bottom-right,
+  .snackbar-container--bottom-left,
+  .snackbar-container--top-center,
+  .snackbar-container--top-right {
+    left: var(--space-4);
+    right: var(--space-4);
+    transform: none;
+    bottom: var(--space-4);
+    top: auto;
+    align-items: stretch;
+  }
+
+  .snackbar {
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+  }
+}

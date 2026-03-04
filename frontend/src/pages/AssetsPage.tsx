@@ -7,6 +7,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/apiService';
 import { useAuth } from '@/contexts/AuthContext';
+import { PageLayout } from '@layouts/index';
+import { LoadingState } from '@components/index';
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import type { Asset, ApiResponse } from '../types';
 import './AssetsPage.css';
 
@@ -102,65 +106,50 @@ const AssetsPage: React.FC = () => {
 
   if (state.loading) {
     return (
-      <div className="assets-page">
-        <div className="page-header">
-          <h1>My Assets</h1>
-        </div>
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading your assets...</p>
-        </div>
-      </div>
+      <PageLayout title="My Assets">
+        <LoadingState message="Loading your assets…" />
+      </PageLayout>
     );
   }
 
   if (state.error) {
     return (
-      <div className="assets-page">
-        <div className="page-header">
-          <h1>My Assets</h1>
-        </div>
+      <PageLayout title="My Assets">
         <div className="error-container">
-          <div className="error-icon">⚠️</div>
+          <WarningAmberRoundedIcon className="error-icon" />
           <h3>Error Loading Assets</h3>
           <p>{state.error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="retry-button"
           >
             Try Again
           </button>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   if (state.assets.length === 0) {
     return (
-      <div className="assets-page">
-        <div className="page-header">
-          <h1>My Assets</h1>
-        </div>
+      <PageLayout title="My Assets">
         <div className="empty-container">
-          <div className="empty-icon">📊</div>
+          <InboxRoundedIcon className="empty-icon" />
           <h3>No Assets Found</h3>
           <p>You haven't added any assets yet. Start building your portfolio!</p>
           <button className="add-asset-button">
             Add Your First Asset
           </button>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="assets-page">
-      <div className="page-header">
-        <h1>My Assets</h1>
-        <p className="asset-count">
-          {state.assets.length} {state.assets.length === 1 ? 'asset' : 'assets'}
-        </p>
-      </div>
+    <PageLayout
+      title="My Assets"
+      subtitle={`${state.assets.length} ${state.assets.length === 1 ? 'asset' : 'assets'}`}
+    >
 
       <div className="assets-table-container">
         <table className="assets-table">
@@ -217,7 +206,7 @@ const AssetsPage: React.FC = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

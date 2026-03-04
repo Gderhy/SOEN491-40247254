@@ -1,6 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import type { ReactNode } from 'react';
-import { useAuth } from '@/contexts/index';
+import { Navigate, useLocation } from "react-router-dom";
+import type { ReactNode } from "react";
+import { useAuth } from "@/contexts/index";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -29,13 +29,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   // Redirect to login if not authenticated
   if (!user) {
-    return (
-      <Navigate 
-        to="/login" 
-        state={{ from: location }} 
-        replace 
-      />
-    );
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // User is authenticated, render the protected content

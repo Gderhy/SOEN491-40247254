@@ -75,6 +75,11 @@ class ApiService {
     localStorage.removeItem(TOKEN_KEY);
   }
 
+  /** Expose the underlying axios instance for services that need direct access */
+  get http() {
+    return this.client;
+  }
+
   // ============ UTILITY METHODS ============
   
   getBaseUrl(): string {
