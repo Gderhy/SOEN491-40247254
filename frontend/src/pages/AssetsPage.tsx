@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/apiService';
 import { useAuth } from '@/contexts/AuthContext';
+import { PageLayout } from '@layouts/index';
 import type { Asset, ApiResponse } from '../types';
 import './AssetsPage.css';
 
@@ -102,45 +103,36 @@ const AssetsPage: React.FC = () => {
 
   if (state.loading) {
     return (
-      <div className="assets-page">
-        <div className="page-header">
-          <h1>My Assets</h1>
-        </div>
+      <PageLayout title="My Assets">
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading your assets...</p>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   if (state.error) {
     return (
-      <div className="assets-page">
-        <div className="page-header">
-          <h1>My Assets</h1>
-        </div>
+      <PageLayout title="My Assets">
         <div className="error-container">
           <div className="error-icon">⚠️</div>
           <h3>Error Loading Assets</h3>
           <p>{state.error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="retry-button"
           >
             Try Again
           </button>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   if (state.assets.length === 0) {
     return (
-      <div className="assets-page">
-        <div className="page-header">
-          <h1>My Assets</h1>
-        </div>
+      <PageLayout title="My Assets">
         <div className="empty-container">
           <div className="empty-icon">📊</div>
           <h3>No Assets Found</h3>
@@ -149,18 +141,15 @@ const AssetsPage: React.FC = () => {
             Add Your First Asset
           </button>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="assets-page">
-      <div className="page-header">
-        <h1>My Assets</h1>
-        <p className="asset-count">
-          {state.assets.length} {state.assets.length === 1 ? 'asset' : 'assets'}
-        </p>
-      </div>
+    <PageLayout
+      title="My Assets"
+      subtitle={`${state.assets.length} ${state.assets.length === 1 ? 'asset' : 'assets'}`}
+    >
 
       <div className="assets-table-container">
         <table className="assets-table">
@@ -217,7 +206,7 @@ const AssetsPage: React.FC = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

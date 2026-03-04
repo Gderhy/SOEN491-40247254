@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { TransactionsService } from '../services';
+import { PageLayout } from '@layouts/index';
 import type { Transaction, PortfolioSummary, TransactionFilters } from '../types';
 import '../styles/transactions.css';
 
@@ -70,18 +71,18 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
 
   if (loading) {
     return (
-      <div className="transactions-page">
+      <PageLayout title="Transaction History">
         <div className="loading-state">
           <div className="spinner"></div>
           <p>Loading transactions...</p>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="transactions-page">
+      <PageLayout title="Transaction History">
         <div className="error-state">
           <h2>Error Loading Transactions</h2>
           <p>{error}</p>
@@ -89,16 +90,16 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
             Try Again
           </button>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="transactions-page">
-      <div className="page-header">
-        <h1>Transaction History</h1>
-        <div className="header-actions">
-          <button 
+    <PageLayout
+      title="Transaction History"
+      actions={
+        <>
+          <button
             onClick={() => setShowFilters(!showFilters)}
             className="filter-toggle-button"
           >
@@ -107,8 +108,9 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
           <button className="add-transaction-button">
             Add Transaction
           </button>
-        </div>
-      </div>
+        </>
+      }
+    >
 
       {/* Portfolio Summary */}
       {portfolio && (
@@ -248,7 +250,7 @@ export const TransactionsPage: React.FC<TransactionsPageProps> = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

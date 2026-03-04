@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/config/supabase';
 import { validateRegisterForm } from '@/utils/validation';
+import { AuthLayout } from '@layouts/index';
 import type { RegisterFormData, FormErrors } from '@/types/auth';
 
 /**
@@ -74,89 +75,87 @@ export function Register() {
 
   if (success) {
     return (
-      <div className="auth-container">
-        <div className="auth-card">
-          <h1>Registration Successful!</h1>
-          <p>Please check your email to verify your account.</p>
-          <p>Redirecting to login page...</p>
-        </div>
-      </div>
+      <AuthLayout title="Registration Successful! 🎉">
+        <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)' }}>
+          Please check your email to verify your account.
+        </p>
+        <p style={{ textAlign: 'center', color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>
+          Redirecting to login page...
+        </p>
+      </AuthLayout>
     );
   }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Create Account</h1>
-        <p>Join Asset Tracker today</p>
+    <AuthLayout
+      title="Create Account"
+      subtitle="Join Asset Tracker today"
+      footer={
+        <p>
+          Already have an account?{' '}
+          <Link to="/login">Sign in here</Link>
+        </p>
+      }
+    >
+      <form onSubmit={handleSubmit} className="auth-form">
+        {errors.general && (
+          <div className="error-message">{errors.general}</div>
+        )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          {errors.general && (
-            <div className="error-message">{errors.general}</div>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className={errors.email ? 'error' : ''}
-              placeholder="Enter your email"
-              disabled={loading}
-            />
-            {errors.email && <span className="field-error">{errors.email}</span>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className={errors.password ? 'error' : ''}
-              placeholder="Enter your password (min 6 characters)"
-              disabled={loading}
-            />
-            {errors.password && <span className="field-error">{errors.password}</span>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              className={errors.confirmPassword ? 'error' : ''}
-              placeholder="Confirm your password"
-              disabled={loading}
-            />
-            {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
-          </div>
-
-          <button 
-            type="submit" 
-            className="auth-button"
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            className={errors.email ? 'error' : ''}
+            placeholder="Enter your email"
             disabled={loading}
-          >
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </button>
-        </form>
-
-        <div className="auth-links">
-          <p>
-            Already have an account? {' '}
-            <Link to="/login">Sign in here</Link>
-          </p>
+          />
+          {errors.email && <span className="field-error">{errors.email}</span>}
         </div>
-      </div>
-    </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            className={errors.password ? 'error' : ''}
+            placeholder="Enter your password (min 6 characters)"
+            disabled={loading}
+          />
+          {errors.password && <span className="field-error">{errors.password}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            className={errors.confirmPassword ? 'error' : ''}
+            placeholder="Confirm your password"
+            disabled={loading}
+          />
+          {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
+        </div>
+
+        <button
+          type="submit"
+          className="auth-button"
+          disabled={loading}
+        >
+          {loading ? 'Creating Account...' : 'Create Account'}
+        </button>
+      </form>
+    </AuthLayout>
   );
 }
 

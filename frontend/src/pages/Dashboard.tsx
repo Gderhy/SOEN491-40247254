@@ -1,31 +1,22 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@contexts/index';
+import { PageLayout } from '@layouts/index';
 import { ROUTES } from '@routes/routeConfig';
+import './Dashboard.css';
 
 /**
  * Dashboard page - protected route
  * Displays user information and app functionality
  */
 export function Dashboard() {
-  const { user, signOut } = useAuth();
-
-  const handleSignOut = async () => {
-    await signOut();
-  };
+  const { user } = useAuth();
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>Asset Tracker Dashboard</h1>
-        <div className="user-info">
-          <span>Welcome, {user?.email}</span>
-          <button onClick={handleSignOut} className="logout-button">
-            Sign Out
-          </button>
-        </div>
-      </header>
-
-      <main className="dashboard-content">
+    <PageLayout
+      title="Dashboard"
+      subtitle={`Welcome back, ${user?.email}`}
+    >
+      <div className="dashboard-grid">
         <div className="dashboard-card">
           <h2>🎉 Authentication Successful!</h2>
           <p>You are now logged in to Asset Tracker.</p>
@@ -58,8 +49,8 @@ export function Dashboard() {
             <li>Add data visualization</li>
           </ul>
         </div>
-      </main>
-    </div>
+      </div>
+    </PageLayout>
   );
 }
 

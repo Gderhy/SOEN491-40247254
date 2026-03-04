@@ -37,7 +37,8 @@
       "@config/*": ["config/*"],
       "@styles/*": ["styles/*"],
       "@routes/*": ["routes/*"],
-      "@assets/*": ["assets/*"]
+      "@assets/*": ["assets/*"],
+      "@layouts/*": ["layouts/*"]
     }
   },
   "include": ["src"]

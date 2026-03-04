@@ -1,7 +1,22 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { ProtectedRoute, ApiTest } from '@components/index';
 import { Home, Login, Register, Dashboard, AssetsPage, TransactionsPage } from '@pages/index';
+import { AppShell } from '@layouts/index';
 import { ROUTES } from './routeConfig';
+
+/**
+ * Wraps the AppShell layout around the <Outlet> for the layout-route pattern.
+ * Protected check is handled by ProtectedRoute, AppShell just provides the chrome.
+ */
+function AppShellLayout() {
+  return (
+    <ProtectedRoute>
+      <AppShell>
+        <Outlet />
+      </AppShell>
+    </ProtectedRoute>
+  );
+}
 
 /**
  * AppRoutes component
@@ -15,35 +30,14 @@ export function AppRoutes() {
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.REGISTER} element={<Register />} />
       <Route path={ROUTES.API_TEST} element={<ApiTest />} />
-      
-      {/* Protected routes */}
-      <Route 
-        path={ROUTES.DASHBOARD}
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path={ROUTES.ASSETS}
-        element={
-          <ProtectedRoute>
-            <AssetsPage />
-          </ProtectedRoute>
-        } 
-      />
-      
-      <Route 
-        path={ROUTES.TRANSACTIONS}
-        element={
-          <ProtectedRoute>
-            <TransactionsPage />
-          </ProtectedRoute>
-        } 
-      />
-      
+
+      {/* Protected routes – all share the AppShell layout */}
+      <Route element={<AppShellLayout />}>
+        <Route path={ROUTES.DASHBOARD}    element={<Dashboard />} />
+        <Route path={ROUTES.ASSETS}       element={<AssetsPage />} />
+        <Route path={ROUTES.TRANSACTIONS} element={<TransactionsPage />} />
+      </Route>
+
       {/* Fallback route - redirect unknown paths to home */}
       <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
     </Routes>
