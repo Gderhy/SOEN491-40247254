@@ -8,7 +8,6 @@ export const ROUTES = {
   REGISTER: '/register',
   DASHBOARD: '/dashboard',
   HOLDINGS: '/holdings',
-  ASSETS: '/assets',
   TRANSACTIONS: '/transactions',
   ACCOUNTS: '/accounts',
   API_TEST: '/api-test',
@@ -54,12 +53,6 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     name: 'Holdings',
     protected: true,
     description: 'Portfolio holdings derived from transaction history'
-  },
-  ASSETS: {
-    path: ROUTES.ASSETS,
-    name: 'Assets',
-    protected: true,
-    description: 'Asset list with live stock price tracking'
   },
   TRANSACTIONS: {
     path: ROUTES.TRANSACTIONS,

@@ -1,10 +1,10 @@
 /**
  * Stocks Service (Frontend)
- * Proxies live stock quote requests through the backend so the Finnhub API
- * key is never exposed to the browser.
+ * Calls the Finnhub public REST API directly from the browser.
+ * Requires VITE_FINNHUB_API_KEY to be set in the frontend environment.
  */
 
-import { apiService } from './apiService';
+import { config } from '../config/env';
 
 export interface StockQuote {
   symbol: string;
@@ -21,35 +21,83 @@ export interface StockQuote {
 
 export type QuoteResult = StockQuote | { error: string };
 
+const FINNHUB_BASE = 'https://finnhub.io/api/v1';
+
+/** Shape of Finnhub /quote response */
+interface FinnhubQuote {
+  c: number;   // current price
+  d: number;   // change
+  dp: number;  // change percent
+  h: number;   // high
+  l: number;   // low
+  o: number;   // open
+  pc: number;  // previous close
+  t: number;   // timestamp (unix seconds)
+}
+
 export class StocksService {
   /**
-   * Fetch live quotes for multiple symbols in a single batch request.
-   * Returns a map of symbol → quote or error descriptor.
+   * Fetch a live quote for a single symbol directly from Finnhub.
+   * Throws an error for unknown symbols or API failures.
    */
-  static async getQuotes(symbols: string[]): Promise<Record<string, QuoteResult>> {
-    if (symbols.length === 0) return {};
+  static async getQuote(symbol: string): Promise<StockQuote> {
+    const apiKey = config.finnhub.apiKey;
+    if (!apiKey) {
+      throw new Error('Finnhub API key is not configured (VITE_FINNHUB_API_KEY)');
+    }
 
-    const response = await apiService.http.get<{
-      status: string;
-      data: Record<string, QuoteResult>;
-    }>('/api/stocks/quotes', {
-      params: { symbols: symbols.join(',') },
-    });
+    const url = `${FINNHUB_BASE}/quote?symbol=${encodeURIComponent(symbol)}&token=${apiKey}`;
+    const response = await fetch(url);
 
-    return response.data.data;
+    if (response.status === 429) {
+      throw new Error('Finnhub rate limit exceeded — please try again later');
+    }
+    if (!response.ok) {
+      throw new Error(`Finnhub returned HTTP ${response.status} for symbol ${symbol}`);
+    }
+
+    const data: FinnhubQuote = await response.json();
+
+    // Finnhub returns all zeros (and t=0) for unknown / unsupported symbols
+    if (data.c === 0 && data.t === 0) {
+      throw new Error(`Symbol not found: ${symbol}`);
+    }
+
+    return {
+      symbol: symbol.toUpperCase(),
+      price: data.c,
+      change: data.d,
+      changePercent: data.dp,
+      high: data.h,
+      low: data.l,
+      open: data.o,
+      previousClose: data.pc,
+      timestamp: data.t,
+    };
   }
 
   /**
-   * Fetch a live quote for a single symbol.
+   * Fetch live quotes for multiple symbols in parallel.
+   * Each entry is either a StockQuote or an error descriptor so individual
+   * failures don't block the rest of the batch.
    */
-  static async getQuote(symbol: string): Promise<StockQuote> {
-    const response = await apiService.http.get<{
-      status: string;
-      data: StockQuote;
-    }>('/api/stocks/quote', {
-      params: { symbol },
-    });
+  static async getQuotes(
+    symbols: string[]
+  ): Promise<Record<string, QuoteResult>> {
+    const results: Record<string, QuoteResult> = {};
 
-    return response.data.data;
+    await Promise.allSettled(
+      symbols.map(async (sym) => {
+        try {
+          results[sym] = await StocksService.getQuote(sym);
+        } catch (err: unknown) {
+          results[sym] = {
+            error: err instanceof Error ? err.message : 'Failed to fetch quote',
+          };
+        }
+      })
+    );
+
+    return results;
   }
 }

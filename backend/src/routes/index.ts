@@ -10,7 +10,6 @@ import authRoutes from './authRoutes.js';
 import transactionsRoutes from './transactions.routes.js';
 import tradingPlatformsRoutes from './trading-platforms.routes.js';
 import tradingAccountsRoutes from './trading-accounts.routes.js';
-import stocksRoutes from './stocks.routes.js';
 
 /**
  * Setup all application routes
@@ -39,10 +38,6 @@ export function setupRoutes(app: Express): void {
     // Trading accounts routes (protected)
     app.use('/api/trading-accounts', tradingAccountsRoutes);
     console.log('✓ Trading accounts routes loaded');
-
-    // Stocks routes (protected) — live quote proxy for Finnhub
-    app.use('/api/stocks', stocksRoutes);
-    console.log('✓ Stocks routes loaded');
     
     // API info route (root path)
     app.use('/', apiRoutes);
@@ -70,9 +65,7 @@ export function setupRoutes(app: Express): void {
           'DELETE /api/trading-platforms/:id': 'Delete trading platform (requires auth)',
           'GET /api/trading-accounts': 'Get trading accounts (requires auth)',
           'POST /api/trading-accounts': 'Create trading account (requires auth)',
-          'DELETE /api/trading-accounts/:id': 'Delete trading account (requires auth)',
-          'GET /api/stocks/quote': 'Get live stock quote for a symbol (requires auth)',
-          'GET /api/stocks/quotes': 'Get live stock quotes for multiple symbols (requires auth)'
+          'DELETE /api/trading-accounts/:id': 'Delete trading account (requires auth)'
         }
       });
     });

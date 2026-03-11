@@ -34,9 +34,6 @@ export const config = {
     url: process.env.SUPABASE_URL!,
     anonKey: process.env.SUPABASE_ANON_KEY!,
     serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY!
-  },
-  finnhub: {
-    apiKey: process.env.FINNHUB_API_KEY ?? ''
   }
 };
 

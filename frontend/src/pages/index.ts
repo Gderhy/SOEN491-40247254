@@ -16,6 +16,3 @@ export { default as TransactionsPage } from './TransactionsPage';
 
 // Export AccountsPage
 export { default as AccountsPage } from './AccountsPage';
-
-// Export AssetsPage (with live stock price tracking)
-export { default as AssetsPage } from './AssetsPage';
