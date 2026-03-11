@@ -17,6 +17,7 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import ShowChartRoundedIcon from '@mui/icons-material/ShowChartRounded';
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
 import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
+import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
@@ -35,6 +36,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { path: ROUTES.DASHBOARD,    label: 'Dashboard',    Icon: DashboardRoundedIcon },
   { path: ROUTES.HOLDINGS,     label: 'Holdings',     Icon: ShowChartRoundedIcon },
+  { path: ROUTES.ASSETS,       label: 'Assets',       Icon: AccountBalanceWalletRoundedIcon },
   { path: ROUTES.TRANSACTIONS, label: 'Transactions', Icon: ReceiptLongRoundedIcon },
   { path: ROUTES.ACCOUNTS,     label: 'Accounts',     Icon: AccountBalanceRoundedIcon },
 ];

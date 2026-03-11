@@ -14,3 +14,6 @@ export { default as TransactionsService } from './transactionsService';
 
 // Accounts Service (platforms + trading accounts)
 export { default as AccountsService } from './accountsService';
+
+// Stocks Service (live price proxy via backend)
+export { StocksService } from './stocksService';

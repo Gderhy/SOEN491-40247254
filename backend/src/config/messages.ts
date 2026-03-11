@@ -59,6 +59,10 @@ export enum SuccessMessage {
   ACCOUNT_CREATED = 'Trading account created successfully',
   ACCOUNT_DELETED = 'Trading account deleted successfully',
 
+  // Stock quote messages
+  STOCK_QUOTE_RETRIEVED = 'Stock quote retrieved successfully',
+  STOCK_QUOTES_RETRIEVED = 'Stock quotes retrieved successfully',
+
   // Generic messages
   OPERATION_SUCCESSFUL = 'Operation completed successfully',
   DATA_SAVED = 'Data saved successfully',
