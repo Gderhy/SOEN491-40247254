@@ -2,6 +2,8 @@
  * Holdings Page
  * Shows each stock/crypto holding aggregated from the user's transaction history.
  * One row per symbol: net quantity, avg cost, total invested, realised P&L, fees.
+ * Live stock prices are fetched via the backend Finnhub proxy and auto-refresh
+ * at the user's chosen interval.
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -16,6 +18,9 @@ import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import TrendingDownRoundedIcon from '@mui/icons-material/TrendingDownRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import type { PortfolioPosition } from '../types';
+import { useLiveAssetPrices } from '../hooks/useLiveAssetPrices';
+import LivePriceCell from '../components/assets/LivePriceCell';
+import RefreshIntervalSelector, { DEFAULT_INTERVAL } from '../components/assets/RefreshIntervalSelector';
 import './HoldingsPage.css';
 
 const HoldingsPage: React.FC = () => {
@@ -25,6 +30,7 @@ const HoldingsPage: React.FC = () => {
   const [positions, setPositions] = useState<PortfolioPosition[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [intervalMs, setIntervalMs] = useState(DEFAULT_INTERVAL.value);
 
   const load = useCallback(async () => {
     try {
@@ -47,6 +53,10 @@ const HoldingsPage: React.FC = () => {
     if (!user || !session) { navigate('/login'); return; }
     load();
   }, [user, session, navigate, load]);
+
+  /* ── Live prices ───────────────────────────────────────────── */
+  const symbols = positions.map((p) => p.symbol);
+  const livePrices = useLiveAssetPrices(symbols, intervalMs);
 
   /* ── helpers ─────────────────────────────────────────────── */
   const fmt = (n: number, digits = 2) =>
@@ -134,6 +144,11 @@ const HoldingsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Live price refresh selector */}
+      <div className="holdings-live-controls">
+        <RefreshIntervalSelector value={intervalMs} onChange={setIntervalMs} />
+      </div>
+
       {/* Table */}
       <div className="holdings-table-container">
         <table className="holdings-table">
@@ -143,6 +158,7 @@ const HoldingsPage: React.FC = () => {
               <th className="ta-right">Quantity</th>
               <th className="ta-right">Avg Cost</th>
               <th className="ta-right">Total Invested</th>
+              <th className="ta-right">Live Price</th>
               <th className="ta-right">Realized P&amp;L</th>
               <th className="ta-right">Fees</th>
               <th className="ta-right"># Trades</th>
@@ -161,6 +177,9 @@ const HoldingsPage: React.FC = () => {
                   <td className="ta-right holding-quantity">{fmtQty(pos.totalQuantity)}</td>
                   <td className="ta-right">{fmt(pos.averageBuyPrice)}</td>
                   <td className="ta-right holding-value">{fmt(pos.totalInvested)}</td>
+                  <td className="ta-right holdings-live-cell">
+                    <LivePriceCell entry={livePrices[pos.symbol]} />
+                  </td>
                   <td className="ta-right">
                     <span className={`holdings-pnl ${pnl >= 0 ? 'holdings-pnl--pos' : 'holdings-pnl--neg'}`}>
                       {pnl >= 0

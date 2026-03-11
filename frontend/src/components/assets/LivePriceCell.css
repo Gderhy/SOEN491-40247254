@@ -1,0 +1,59 @@
+/* LivePriceCell styles */
+
+.live-price {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 0.875rem;
+}
+
+.live-price--loading {
+  color: var(--color-text-muted, #888);
+  font-style: italic;
+}
+
+.live-price--error {
+  color: var(--color-error, #d32f2f);
+  font-size: 0.8rem;
+}
+
+.live-price--unavailable {
+  color: var(--color-text-muted, #888);
+  font-size: 0.8rem;
+}
+
+.live-price--stale {
+  opacity: 0.75;
+}
+
+.live-price__value {
+  font-weight: 600;
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.live-price__change {
+  font-size: 0.78rem;
+}
+
+.live-price__change--pos {
+  color: var(--color-success, #2e7d32);
+}
+
+.live-price__change--neg {
+  color: var(--color-error, #d32f2f);
+}
+
+.live-price__stale-badge {
+  font-size: 0.7rem;
+  background: #f59e0b;
+  color: #fff;
+  border-radius: 3px;
+  padding: 0 4px;
+  letter-spacing: 0.02em;
+}
+
+.live-price__updated {
+  font-size: 0.7rem;
+  color: var(--color-text-muted, #888);
+}

@@ -30,6 +30,9 @@ export const config = {
   api: {
     baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000'
   },
+  finnhub: {
+    apiKey: import.meta.env.VITE_FINNHUB_API_KEY || ''
+  },
   isDevelopment: import.meta.env.DEV,
   isProduction: import.meta.env.PROD
 };
