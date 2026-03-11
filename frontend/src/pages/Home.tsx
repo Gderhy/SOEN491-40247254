@@ -26,7 +26,7 @@ export function Home() {
       <header className="home-header">
         <ShowChartRoundedIcon className="home-header__icon" />
         <h1>Asset Tracker</h1>
-        <p>Track and manage your assets with ease</p>
+        <p>Track and manage your Holdings with ease</p>
       </header>
 
       <main className="home-content">
@@ -39,9 +39,9 @@ export function Home() {
                 <DashboardRoundedIcon fontSize="small" />
                 Go to Dashboard
               </Link>
-              <Link to="/assets" className="cta-button">
+              <Link to="/holdings" className="cta-button">
                 <ShowChartRoundedIcon fontSize="small" />
-                View My Assets
+                View My Holdings
               </Link>
               <Link to="/api-test" className="cta-button secondary">
                 <ApiRoundedIcon fontSize="small" />
