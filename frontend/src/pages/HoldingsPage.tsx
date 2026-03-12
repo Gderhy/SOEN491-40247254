@@ -28,6 +28,7 @@ import LivePriceCell from '../components/assets/LivePriceCell';
 import RefreshIntervalSelector, { DEFAULT_INTERVAL } from '../components/assets/RefreshIntervalSelector';
 import AllocationChart from '../components/charts/AllocationChart';
 import PortfolioHistoryChart from '../components/charts/PortfolioHistoryChart';
+import { fmtCurrency, fmtQty, fmtDate } from '../utils/formatters';
 import './HoldingsPage.css';
 
 type SortField = 'unrealizedPnL' | 'currentValue' | 'quantity' | 'weight' | 'lastTrade';
@@ -163,21 +164,7 @@ const HoldingsPage: React.FC = () => {
     });
   }, [enriched, sortField, sortDir]);
 
-  /* -- helpers --------------------------------------------------- */
-  const fmt = (n: number, digits = 2) =>
-    new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits,
-    }).format(n);
-
-  const fmtQty = (n: number) =>
-    new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 8 }).format(n);
-
-  const fmtDate = (d: Date) =>
-    new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-
+  /* -- sort icon component -------------------------------------- */
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) return <span className="sort-icon sort-icon--inactive">⇕</span>;
     return sortDir === 'asc'
@@ -232,27 +219,27 @@ const HoldingsPage: React.FC = () => {
       <div className="holdings-summary">
         <div className="holdings-summary__stat">
           <span className="holdings-summary__label">Total Invested</span>
-          <span className="holdings-summary__value">{fmt(totalInvested)}</span>
+          <span className="holdings-summary__value">{fmtCurrency(totalInvested)}</span>
         </div>
         <div className="holdings-summary__stat">
           <span className="holdings-summary__label">Current Value</span>
-          <span className="holdings-summary__value">{fmt(totalCurrentValue)}</span>
+          <span className="holdings-summary__value">{fmtCurrency(totalCurrentValue)}</span>
         </div>
         <div className="holdings-summary__stat">
           <span className="holdings-summary__label">Unrealized P&amp;L</span>
           <span className={`holdings-summary__value ${totalUnrealizedPnL >= 0 ? 'positive' : 'negative'}`}>
-            {totalUnrealizedPnL >= 0 ? '+' : ''}{fmt(totalUnrealizedPnL)}
+            {totalUnrealizedPnL >= 0 ? '+' : ''}{fmtCurrency(totalUnrealizedPnL)}
           </span>
         </div>
         <div className="holdings-summary__stat">
           <span className="holdings-summary__label">Realized P&amp;L</span>
           <span className={`holdings-summary__value ${totalRealizedPnL >= 0 ? 'positive' : 'negative'}`}>
-            {totalRealizedPnL >= 0 ? '+' : ''}{fmt(totalRealizedPnL)}
+            {totalRealizedPnL >= 0 ? '+' : ''}{fmtCurrency(totalRealizedPnL)}
           </span>
         </div>
         <div className="holdings-summary__stat">
           <span className="holdings-summary__label">Total Fees</span>
-          <span className="holdings-summary__value">{fmt(totalFees)}</span>
+          <span className="holdings-summary__value">{fmtCurrency(totalFees)}</span>
         </div>
       </div>
 
@@ -336,8 +323,8 @@ const HoldingsPage: React.FC = () => {
                     <div className="holdings-name">{pos.name}</div>
                   </td>
                   <td className="ta-right holding-quantity">{fmtQty(pos.totalQuantity)}</td>
-                  <td className="ta-right">{fmt(pos.averageBuyPrice)}</td>
-                  <td className="ta-right holding-value">{fmt(cv)}</td>
+                  <td className="ta-right">{fmtCurrency(pos.averageBuyPrice)}</td>
+                  <td className="ta-right holding-value">{fmtCurrency(cv)}</td>
                   <td className="ta-right holdings-live-cell">
                     <LivePriceCell entry={livePrices[pos.symbol]} />
                   </td>
@@ -350,7 +337,7 @@ const HoldingsPage: React.FC = () => {
                           ? <TrendingUpRoundedIcon style={{ fontSize: '1rem' }} />
                           : <TrendingDownRoundedIcon style={{ fontSize: '1rem' }} />}
                         <span>
-                          {unrealized >= 0 ? '+' : ''}{fmt(unrealized)}
+                          {unrealized >= 0 ? '+' : ''}{fmtCurrency(unrealized)}
                           {unrealizedPct !== null && (
                             <span className="holdings-pnl__pct">
                               {' '}({unrealizedPct >= 0 ? '+' : ''}{unrealizedPct.toFixed(1)}%)
@@ -369,7 +356,7 @@ const HoldingsPage: React.FC = () => {
                       {realizedPnL >= 0
                         ? <TrendingUpRoundedIcon style={{ fontSize: '1rem' }} />
                         : <TrendingDownRoundedIcon style={{ fontSize: '1rem' }} />}
-                      {realizedPnL >= 0 ? '+' : ''}{fmt(realizedPnL)}
+                      {realizedPnL >= 0 ? '+' : ''}{fmtCurrency(realizedPnL)}
                     </span>
                   </td>
 
@@ -386,7 +373,7 @@ const HoldingsPage: React.FC = () => {
                     </div>
                   </td>
 
-                  <td className="ta-right">{pos.totalFees > 0 ? fmt(pos.totalFees) : '—'}</td>
+                  <td className="ta-right">{pos.totalFees > 0 ? fmtCurrency(pos.totalFees) : '—'}</td>
                   <td className="ta-right">{pos.transactionCount}</td>
                   <td>{fmtDate(pos.lastTransactionDate)}</td>
                 </tr>

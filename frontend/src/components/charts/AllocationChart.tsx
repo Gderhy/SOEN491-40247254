@@ -12,6 +12,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { fmtCurrency } from '../../utils/formatters';
+import { generateChartColors } from '../../utils/chartColors';
 
 interface AllocationEntry {
   symbol: string;
@@ -23,27 +25,13 @@ interface AllocationChartProps {
   data: AllocationEntry[];
 }
 
-const COLORS = [
-  '#667eea', '#764ba2', '#059669', '#d97706', '#dc2626',
-  '#2563eb', '#7c3aed', '#db2777', '#0891b2', '#65a30d',
-  '#ea580c', '#16a34a', '#9333ea', '#0284c7', '#ca8a04',
-];
-
-const fmt = (n: number) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
-
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const entry: AllocationEntry = payload[0].payload;
     return (
       <div className="alloc-chart-tooltip">
         <p className="alloc-chart-tooltip__symbol">{entry.symbol}</p>
-        <p className="alloc-chart-tooltip__value">{fmt(entry.value)}</p>
+        <p className="alloc-chart-tooltip__value">{fmtCurrency(entry.value)}</p>
         <p className="alloc-chart-tooltip__weight">{entry.weight.toFixed(1)}%</p>
       </div>
     );
@@ -75,6 +63,8 @@ const renderCustomLabel = ({ cx, cy, midAngle, outerRadius, weight, symbol }: an
 const AllocationChart: React.FC<AllocationChartProps> = ({ data }) => {
   if (!data || data.length === 0) return null;
 
+  const colors = generateChartColors(data.length);
+
   return (
     <div className="alloc-chart-wrapper">
       <h3 className="chart-section-title">Portfolio Allocation</h3>
@@ -92,7 +82,7 @@ const AllocationChart: React.FC<AllocationChartProps> = ({ data }) => {
             label={renderCustomLabel}
           >
             {data.map((_entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
           <Tooltip content={<CustomTooltip />} />

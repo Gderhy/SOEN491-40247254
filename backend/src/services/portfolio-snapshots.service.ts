@@ -6,14 +6,9 @@
 import { supabase } from '../config/supabase.js';
 import { AppError } from '../errors/AppError.js';
 import { HttpStatusCode } from '../config/httpStatus.js';
+import { PortfolioSnapshot } from '../models/PortfolioSnapshot.js';
 
-export interface PortfolioSnapshot {
-  id: string;
-  user_id: string;
-  date: string;
-  portfolio_value: number;
-  created_at: string;
-}
+export type { PortfolioSnapshot };
 
 export class PortfolioSnapshotsService {
   /**

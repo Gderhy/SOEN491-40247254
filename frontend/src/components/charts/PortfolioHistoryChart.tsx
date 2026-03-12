@@ -2,7 +2,7 @@
  * PortfolioHistoryChart
  * Line chart showing portfolio value over time.
  * Uses portfolio_snapshots from the backend API when available,
- * or falls back to a generated stub if the table is not yet seeded.
+ * or falls back to a placeholder if the table is not yet seeded.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -16,57 +16,34 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { apiService } from '../../services/apiService';
+import { fmtCurrency, fmtCurrencyCompact } from '../../utils/formatters';
+import {
+  filterByRange,
+  formatSnapshotDate,
+  type Snapshot,
+  type SnapshotRange,
+} from '../../utils/snapshotUtils';
 
-export interface Snapshot {
-  date: string;
-  portfolio_value: number;
-}
-
-type Range = '1W' | '1M' | '3M' | '1Y' | 'ALL';
-
-const RANGES: Range[] = ['1W', '1M', '3M', '1Y', 'ALL'];
+const RANGES: SnapshotRange[] = ['1W', '1M', '3M', '1Y', 'ALL'];
 
 interface PortfolioHistoryChartProps {
   currentValue: number;
 }
-
-const fmt = (n: number) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(n);
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="history-chart-tooltip">
         <p className="history-chart-tooltip__date">{label}</p>
-        <p className="history-chart-tooltip__value">{fmt(payload[0].value)}</p>
+        <p className="history-chart-tooltip__value">{fmtCurrency(payload[0].value)}</p>
       </div>
     );
   }
   return null;
 };
 
-function filterByRange(snapshots: Snapshot[], range: Range): Snapshot[] {
-  if (range === 'ALL') return snapshots;
-  const now = new Date();
-  const days: Record<Range, number> = { '1W': 7, '1M': 30, '3M': 90, '1Y': 365, ALL: Infinity };
-  const cutoff = new Date(now.getTime() - days[range] * 24 * 60 * 60 * 1000);
-  return snapshots.filter((s) => new Date(s.date) >= cutoff);
-}
-
-function formatDate(dateStr: string, range: Range): string {
-  const d = new Date(dateStr);
-  if (range === '1W') return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  if (range === '1M') return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  return d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
-}
-
 const PortfolioHistoryChart: React.FC<PortfolioHistoryChartProps> = ({ currentValue }) => {
-  const [range, setRange] = useState<Range>('1M');
+  const [range, setRange] = useState<SnapshotRange>('1M');
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -89,16 +66,15 @@ const PortfolioHistoryChart: React.FC<PortfolioHistoryChartProps> = ({ currentVa
   const filtered = filterByRange(snapshots, range);
 
   const chartData = filtered.map((s) => ({
-    date: formatDate(s.date, range),
+    date: formatSnapshotDate(s.date, range),
     value: s.portfolio_value,
   }));
 
   const hasData = chartData.length >= 2;
 
-  const trend =
-    hasData
-      ? chartData[chartData.length - 1].value - chartData[0].value
-      : 0;
+  const trend = hasData
+    ? chartData[chartData.length - 1].value - chartData[0].value
+    : 0;
   const lineColor = trend >= 0 ? '#059669' : '#dc2626';
 
   return (
@@ -124,7 +100,7 @@ const PortfolioHistoryChart: React.FC<PortfolioHistoryChartProps> = ({ currentVa
         <div className="history-chart-placeholder">
           <p>No historical data yet.</p>
           <p className="history-chart-placeholder__sub">
-            Current portfolio value: <strong>{fmt(currentValue)}</strong>
+            Current portfolio value: <strong>{fmtCurrency(currentValue)}</strong>
           </p>
           <p className="history-chart-placeholder__hint">
             Snapshots are saved daily. Come back tomorrow to see your first data point.
@@ -141,7 +117,7 @@ const PortfolioHistoryChart: React.FC<PortfolioHistoryChartProps> = ({ currentVa
               axisLine={{ stroke: '#e1e5e9' }}
             />
             <YAxis
-              tickFormatter={fmt}
+              tickFormatter={fmtCurrencyCompact}
               tick={{ fontSize: 11, fill: '#9ca3af' }}
               tickLine={false}
               axisLine={false}
