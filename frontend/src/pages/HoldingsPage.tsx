@@ -179,7 +179,7 @@ const HoldingsPage: React.FC = () => {
     new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
   const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) return <span className="sort-icon sort-icon--inactive">&#x21D5;</span>;
+    if (sortField !== field) return <span className="sort-icon sort-icon--inactive">⇕</span>;
     return sortDir === 'asc'
       ? <ArrowUpwardRoundedIcon style={{ fontSize: '0.8rem', verticalAlign: 'middle' }} />
       : <ArrowDownwardRoundedIcon style={{ fontSize: '0.8rem', verticalAlign: 'middle' }} />;
@@ -359,7 +359,7 @@ const HoldingsPage: React.FC = () => {
                         </span>
                       </span>
                     ) : (
-                      <span className="holdings-pnl-unavailable">&#8212;</span>
+                      <span className="holdings-pnl-unavailable">—</span>
                     )}
                   </td>
 
@@ -386,7 +386,7 @@ const HoldingsPage: React.FC = () => {
                     </div>
                   </td>
 
-                  <td className="ta-right">{pos.totalFees > 0 ? fmt(pos.totalFees) : '&#8212;'}</td>
+                  <td className="ta-right">{pos.totalFees > 0 ? fmt(pos.totalFees) : '—'}</td>
                   <td className="ta-right">{pos.transactionCount}</td>
                   <td>{fmtDate(pos.lastTransactionDate)}</td>
                 </tr>

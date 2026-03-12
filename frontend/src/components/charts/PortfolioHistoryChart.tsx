@@ -119,7 +119,7 @@ const PortfolioHistoryChart: React.FC<PortfolioHistoryChartProps> = ({ currentVa
       </div>
 
       {loading ? (
-        <div className="history-chart-placeholder">Loading chart data…</div>
+        <div className="history-chart-placeholder">Loading chart data...</div>
       ) : !hasData ? (
         <div className="history-chart-placeholder">
           <p>No historical data yet.</p>
