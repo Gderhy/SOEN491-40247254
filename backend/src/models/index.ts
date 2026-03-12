@@ -10,6 +10,7 @@ export * from './BaseModel.js';
 export * from './User.js';
 export * from './TradingPlatform.js';
 export * from './TradingAccount.js';
+export * from './PortfolioSnapshot.js';
 
 // Database services
 export * from '../database/DatabaseService.js';
