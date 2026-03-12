@@ -62,5 +62,9 @@ export enum SuccessMessage {
   // Generic messages
   OPERATION_SUCCESSFUL = 'Operation completed successfully',
   DATA_SAVED = 'Data saved successfully',
-  DATA_DELETED = 'Data deleted successfully'
+  DATA_DELETED = 'Data deleted successfully',
+
+  // Portfolio snapshot messages
+  SNAPSHOTS_RETRIEVED = 'Portfolio snapshots retrieved successfully',
+  SNAPSHOT_SAVED = 'Portfolio snapshot saved successfully'
 }
