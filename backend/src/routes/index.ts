@@ -10,6 +10,7 @@ import authRoutes from './authRoutes.js';
 import transactionsRoutes from './transactions.routes.js';
 import tradingPlatformsRoutes from './trading-platforms.routes.js';
 import tradingAccountsRoutes from './trading-accounts.routes.js';
+import portfolioSnapshotsRoutes from './portfolio-snapshots.routes.js';
 
 /**
  * Setup all application routes
@@ -38,6 +39,10 @@ export function setupRoutes(app: Express): void {
     // Trading accounts routes (protected)
     app.use('/api/trading-accounts', tradingAccountsRoutes);
     console.log('✓ Trading accounts routes loaded');
+
+    // Portfolio snapshots routes (protected)
+    app.use('/api/portfolio-snapshots', portfolioSnapshotsRoutes);
+    console.log('✓ Portfolio snapshots routes loaded');
     
     // API info route (root path)
     app.use('/', apiRoutes);
